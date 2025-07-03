@@ -1,0 +1,23 @@
+---
+params:
+  pid: "Patient"
+title: "ddPCR laboratory results"
+fontsize: 10pt
+geometry: margin=1cm
+fig_width: 8
+fig_height: 6
+output:
+  pdf_document:
+    keep_tex: false
+    toc: false
+    highlight: zenburn
+header-includes:
+- \usepackage{fancyhdr}
+- \usepackage{lastpage}
+- \usepackage{xcolor}
+- \usepackage{tabularx}
+- \usepackage{caption}
+
+---
+\definecolor{darkgreen}{HTML}{188a06}
+\definecolor{darkbrown}{HTML}{A52A2A}
