@@ -21,3 +21,31 @@ header-includes:
 ---
 \definecolor{darkgreen}{HTML}{188a06}
 \definecolor{darkbrown}{HTML}{A52A2A}
+
+\large\textbf{\underline{KAPA Library Quantification}}
+
+\textbf{\underline{Standard Curve (Set 1)}}
+
+\textbf{Experiment Information}
+
+\begin{tabular}{l l}
+File name: & B1 \\
+Run started & B5 \\
+Run ended & B6 \\
+Machine used: & Machine \\
+\end{tabular}
+
+\textbf{Quantification Information}
+
+\begin{tabular}{|c | c | c |}
+Parameter & Results & QC Status \\
+Threshold &         &           \\
+Slope     &         &           \\
+Reaction efficiency &  &        \\
+$R^2$ Value   &         &           \\
+\end{tabular} 
+
+\textbf{Quantification Results} 
+
+\textbf{Quality Control (QC) Checklist}
+
