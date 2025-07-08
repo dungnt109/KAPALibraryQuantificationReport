@@ -1,30 +1,5 @@
----
-params:
-  pid: "Patient"
-title: "ddPCR laboratory results"
-fontsize: 10pt
-geometry: margin=1cm
-fig_width: 8
-fig_height: 6
-output:
-  pdf_document:
-    keep_tex: false
-    toc: false
-    highlight: zenburn
-header-includes:
-- \usepackage{fancyhdr}
-- \usepackage{lastpage}
-- \usepackage{xcolor}
-- \usepackage{tabularx}
-- \usepackage{caption}
-
----
-\definecolor{darkgreen}{HTML}{188a06}
-\definecolor{darkbrown}{HTML}{A52A2A}
-
-\large\textbf{\underline{KAPA Library Quantification}}
-
-\textbf{\underline{Standard Curve (Set 1)}}
+\newpage
+\textbf{\underline{Standard Curve (Set 2)}}
 
 \textbf{Experiment Information}
 
@@ -38,11 +13,14 @@ Machine used: & Machine \\
 \textbf{Quantification Information}
 
 \begin{tabular}{|c | c | c |}
+\hline
 Parameter & Results & QC Status \\
+\hline
 Threshold &         &           \\
 Slope     &         &           \\
 Reaction efficiency &  &        \\
 $R^2$ Value   &         &           \\
+\hline
 \end{tabular} 
 
 \textbf{Quantification Results} 
@@ -50,14 +28,22 @@ $R^2$ Value   &         &           \\
 \textbf{Quality Control (QC) Checklist}
 
 
-\begin{tabular} {|c l c|}
-No. & Quality Control Criteria & QC Status \\
+\begin{tabularx}{\textwidth} {|c | X | c|}
+\hline
+\textbf{No.} & \textbf{Quality Control Criteria} & \textbf{QC Status} \\
+\hline
 1   & Slope between -3.1 and -3.6 &        \\
 2   & Reaction Efficiency 90\%-110\% &       \\
 3   & $R^2$ value: $\geq$0.99     &       \\
 4   & $\Delta$Ct of replicates within $\pm$1.5 & \\
 5   & $\Delta$Ct of Average Ct between consecutive Standards: 3.1 to 3.6 & \\
 6   & Lowest Ct of NTC $\geq$3.0 Ct from highest Ct of Standard 6       & \\
-Overall QC Status & 1  & \\
-\end{tabular} 
+\hline
+\multicolumn{2}{|l}{Overall QC Status}   & \\
+\hline
+\end{tabularx}
+
+
+
+
 

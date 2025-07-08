@@ -1,0 +1,45 @@
+\newpage
+\textbf{\underline{Samples (Set 1)}}
+
+\textbf{Experiment Information}
+
+\begin{tabular}{l l}
+File name: & B1 \\
+Run started & B5 \\
+Run ended & B6 \\
+Machine used: & Machine \\
+\end{tabular}
+
+\textbf{Quantification Information}
+
+\begin{tabular}{|c | c | c |}
+\hline
+Parameter & Results & QC Status \\
+\hline
+Threshold &         &           \\
+Slope     &         &           \\
+Reaction efficiency &  &        \\
+$R^2$ Value   &         &           \\
+\hline
+\end{tabular} 
+
+\textbf{Quantification Results} 
+
+
+
+\textbf{Quality Control (QC) Checklist}
+
+\begin{tabularx}{\textwidth} {|c | X | c|}
+\hline
+\textbf{No.} & \textbf{Quality Control Criteria} & \textbf{QC Status} \\
+\hline
+1   & $\Delta$Ct of replicates within $\pm$1.5 &        \\
+\hline
+\multicolumn{2}{|l}{Overall QC Status}   & \\
+\hline
+\end{tabularx}
+
+
+
+
+
