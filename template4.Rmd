@@ -1,4 +1,6 @@
 \newpage
+\textbf{`r template`}
+
 \textbf{\underline{Samples (Set 2)}}
 
 \textbf{Experiment Information}

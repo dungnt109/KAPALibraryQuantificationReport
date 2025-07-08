@@ -49,6 +49,8 @@ header-includes:
 
 templates <- c("template1.Rmd", "template2.Rmd", "template3.Rmd")
 
+text <- "hello"
+
 for (template in templates) {
 	include_template <- TRUE
 	if (include_template){

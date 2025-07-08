@@ -1,4 +1,6 @@
 \newpage
+\textbf{`r template`}
+
 \textbf{\underline{Standard Curve (Set 2)}}
 
 \textbf{Experiment Information}

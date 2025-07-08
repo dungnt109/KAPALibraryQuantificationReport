@@ -1,2 +1,13 @@
 \newpage 
 \textbf{\underline{KAPA Library Quantification Summary Report}}
+
+
+
+\vspace{0.08cm}
+\renewcommand{\arraystretch}{2}
+\begin{tabularx}{\textwidth}{p{3cm}p{6cm}p{3cm}p{6cm}}
+Performed By: &  \underline{\hspace{5cm}}   & Verified By: & \underline{\hspace{5cm}}  \\
+Signature:     & \underline{\hspace{5cm}}   & Signature:   & \underline{\hspace{5cm}}  \\
+Date          &  \underline{\hspace{5cm}}   & Date:        & \underline{\hspace{5cm}}  \\
+\end{tabularx}
+
