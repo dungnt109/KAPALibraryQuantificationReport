@@ -1,14 +1,24 @@
-\textbf{`r template`}
+```{r, echo=FALSE, warning = FALSE}
+data <- read.csv(file_path, sep=",", header=FALSE)
 
+file_name = paste(data[1, 2], data[1, 3], sep="")
+file_name = gsub("_", "\\\\_", file_name)
+run_started = data[5, 2]
+run_ended = data[6, 2]
+machine = data[11, 2]
+
+
+
+```
 \textbf{\underline{Standard Curve (Set 1)}}
 
 \textbf{Experiment Information}
 
 \begin{tabular}{l l}
-File name: & B1 \\
-Run started & B5 \\
-Run ended & B6 \\
-Machine used: & Machine \\
+File name: &  `r file_name` \\
+Run started & `r run_started` \\
+Run ended & `r run_ended` \\
+Machine used: & `r machine` \\
 \end{tabular}
 
 \textbf{Quantification Information}

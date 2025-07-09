@@ -42,7 +42,7 @@ header-includes:
 
 
 
-\large\textbf{\underline{KAPA Library Quantification}}
+\large\textbf{\underline{`r analysis_type` }}
 
 
 ```{r results='asis', echo = FALSE, warning = FALSE, message=FALSE}

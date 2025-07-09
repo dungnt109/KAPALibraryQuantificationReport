@@ -15,10 +15,10 @@ run_by_question <- function(){
         if (answer == length(options) - 1){
                 cat("Please specify:")
                 run_by <- readLines("stdin",n=1)
-        } else if (answer == length(options)) {
-		run_by = ""
+        } else if (answer < length(options)) {
+		run_by  <- options[answer]
 	} else {
-                run_by <- options[answer] 
+                run_by <- ""
         }
 
         return(run_by)
@@ -38,10 +38,10 @@ run_date_question <- function(){
 
         answer <- as.numeric(trimws(readLines("stdin",n=1)))
 
-	if (answer == length(options)){
- 		run_date <- ""
+	if (answer < length(options)){
+ 		run_date <- options[answer]
 	} else {
-                run_date <- options[answer]
+                run_date <- ""
 	}
         return(run_date)
 
@@ -82,5 +82,14 @@ run_type_question <- function() {
         answer <- as.numeric(trimws(readLines("stdin",n=1)))
 
         return(options[answer])
+
+}
+
+folder_chooser <- function(){
+
+	cat("\nChoose a folder:\n")
+	#folder <- file.choose(new = FALSE)
+	folder <- "/home/dungnt/Documents/Repository/QuantificationReport/Sample results folder/2024-07-25; Lot 0000649535_20250701 - ALB MNC 0624 Std Curve, 4mM - Run Information.csv"
+	return(folder)
 
 }
