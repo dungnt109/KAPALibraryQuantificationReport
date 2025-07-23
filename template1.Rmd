@@ -135,7 +135,7 @@ quantification_result$`Given Concentration` = ifelse(quantification_result$`Give
 
 quantification_result <- quantification_result[, c(1, 2, 3, 4, 8, 5, 6, 7)]
 
-colnames <- c("Well", "Sample", "Type", "Given Concentration", "Calculated Concentration", "Ct Value", "$\\Delta T$ of Replicates", "$\\Delta T$")
+colnames <- c("\\makecell[l]{Well}", "\\makecell[l]{Sample}", "\\makecell[l]{Type}", "\\makecell[l]{Given\\\\Concentration}", "\\makecell[l]{Calculated\\\\Concentration}", "\\makecell[l]{Ct\\\\Value}", "\\makecell[l]{$\\Delta Ct$ of\\\\Replicates}", "\\makecell[l]{$\\Delta Ct$ of\\\\Averages}")
 
 ```
 \textbf{\underline{Standard Curve (Set 1)}}
@@ -170,9 +170,19 @@ $R^2$ Value   &   `r r_2_value`      &      `r r_2_status`     \\
     \label{fig:yourlabel}
 \end{figure}
 
-```{r fig1, fig.align="center", echo=FALSE}
-kable(quantification_result, col.names = colnames, booktabs = TRUE, escape = FALSE) 
-   
+```{r fig1, fig.align="center", echo = FALSE}
+
+ 
+kbl(quantification_result,
+    format = "latex",
+    booktabs = TRUE,
+    escape = FALSE,
+    col.names = colnames,
+    align = "l") %>%
+  column_spec(1, width = "1cm") %>%
+  column_spec(2, width = "4cm") 
+ 
+
 
 ```
 
@@ -193,18 +203,3 @@ kable(quantification_result, col.names = colnames, booktabs = TRUE, escape = FAL
 \multicolumn{2}{|l}{Overall QC Status}   & \\
 \hline
 \end{tabularx}
-
-
-
-
-
-```{r}
-
-
-df <- data.frame(Name = c("Alice", "$\\Delta$Bob"),
-                 Score = c(90, 85))
-
-kable(df, format = "latex", booktabs = TRUE, 
-      align = c("p{5cm}", "p{3cm}"))
-
-``` 
