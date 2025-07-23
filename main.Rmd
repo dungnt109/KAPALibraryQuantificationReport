@@ -17,6 +17,7 @@ header-includes:
 - \usepackage{xcolor}
 - \usepackage{tabularx}
 - \usepackage{caption}
+- \usepackage{makecell}
 
 ---
 \definecolor{darkgreen}{HTML}{188a06}

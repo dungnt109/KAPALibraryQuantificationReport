@@ -44,7 +44,6 @@ if (round(standard_curve_result$R.2, digits=2) >= 0.99){
 }
 
 
-
 quantification_result_path = paste(path, " Quantification Cq Results.csv", sep="")
 
 df = read.csv(quantification_result_path, sep=",", header=TRUE)
@@ -80,14 +79,14 @@ df <- df %>%
 
 df <- df %>%
   group_by(Type) %>%
-  mutate(average = ifelse(row_number() == 1, sprintf("%#.2f", average), "")) %>%
+  mutate(average = ifelse(row_number() == 1, average, "")) %>%
   ungroup()
 
 
 df$val_num <- suppressWarnings(as.numeric(df$average))
 
 # Create result column
-df$result <- df$val_num
+df$delta_average <- df$val_num
 
 for (i in 1:(nrow(df))) {
   # Only process non-NA (non-empty) values
@@ -101,12 +100,12 @@ for (i in 1:(nrow(df))) {
 
     # If we found a valid next value, subtract
     if (j <= nrow(df)) {
-      df$result[i] <- sprintf("%#.2f", df$val_num[j] - df$val_num[i])
+      df$delta_average[i] <- sprintf("%#.2f", df$val_num[j] - df$val_num[i])
     } else {
-      df$result[i] <- ""
+      df$delta_average[i] <- ""
     }
   } else {
-    df$result[i] <- ""
+    df$delta_average[i] <- ""
   }
 }
 
@@ -129,6 +128,7 @@ colnames <- c("\\makecell[l]{Well}", "\\makecell[l]{Sample}", "\\makecell[l]{Typ
 
 numeric_replicates <- suppressWarnings(as.numeric(df$replicate))
 
+
 valid_replicates <- numeric_replicates[!is.na(numeric_replicates)]
 
 if (all(valid_replicates >= -1.5 & valid_replicates <= 1.5)){
@@ -141,20 +141,22 @@ if (all(valid_replicates >= -1.5 & valid_replicates <= 1.5)){
 
 }
 
-
-numeric_averages <- suppressWarnings(as.numeric(df$average))
+numeric_averages <- suppressWarnings(as.numeric(df$delta_average))
 
 valid_averages <- numeric_averages[!is.na(numeric_averages)]
 
+
 if (all(valid_averages >= 3.1 & valid_averages <= 3.6 )){
 	
-	replicate_average <- "\\textcolor{darkgreen}{PASS}"
+	average_status <- "\\textcolor{darkgreen}{PASS}"
 
 } else {
 	
-	replicate_average <- "\\textcolor{orange}{ALERT}"
+	average_status <- "\\textcolor{orange}{ALERT}"
 
 }
+
+print(valid_averages)
 
 
 ```
@@ -219,7 +221,7 @@ kbl(df,
 2   & Reaction Efficiency 90\%-110\% &  `r reaction_efficiency_status`     \\
 3   & $R^2$ value: $\geq$0.99     &     `r r_2_status`  \\
 4   & $\Delta$Ct of replicates within $\pm$1.5 &   `r replicate_status` \\
-5   & $\Delta$Ct of Average Ct between consecutive Standards: 3.1 to 3.6 & `r replicate_average` \\
+5   & $\Delta$Ct of Average Ct between consecutive Standards: 3.1 to 3.6 & `r average_status` \\
 6   & Lowest Ct of NTC $\geq$3.0 Ct from highest Ct of Standard 6       & \\
 \hline
 \multicolumn{2}{|l}{Overall QC Status}   & \\
