@@ -52,13 +52,16 @@ templates <- c("template1.Rmd", "template2.Rmd", "template3.Rmd")
 
 text <- "hello"
 
-for (template in templates) {
-	include_template <- TRUE
-	if (include_template){
-  		cat(knitr::knit_child(template, quiet = TRUE))
-	}
-}
-  
+#for (template in templates) {
+#	include_template <- TRUE
+#	if (include_template){
+#  		cat(knitr::knit_child(template, quiet = TRUE))
+#	}
+#}
+
+cat(render_template1(file_path))
+   
+
 cat(knitr::knit_child("summary.Rmd", quiet = TRUE))
 
 ```

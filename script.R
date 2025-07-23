@@ -1,4 +1,5 @@
 source("input_questions.R")
+source("custom_functions.R")
 
 library(rmarkdown)
 library(knitr)
@@ -17,17 +18,6 @@ analysis_type = analysis_question()
 #run_type = run_type_question()
 
 file_path = folder_chooser()
-
-path = sub("Run Information.*", "", file_path)
-
-figure_path <- paste(path, "Amplification.png", sep="")
-
-
-standard_curve_path = paste(path, " Standard Curve Results.csv", sep="")
-
-standard_curve_result = read.csv(standard_curve_path, sep=",", header=TRUE)
-
-
 
 
 render("./main.Rmd", params = list(), output_file = "1.pdf") 
