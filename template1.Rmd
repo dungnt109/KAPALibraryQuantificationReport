@@ -7,6 +7,12 @@ run_started = data[5, 2]
 run_ended = data[6, 2]
 machine = data[11, 2]
 
+if (machine == "CT019934"){
+	machine = "CFX96 (1)"
+} else if (machine == "CT020097"){
+	machine = "CFX96 (2)"
+}
+
 path = sub("Run Information.*", "", file_path)
 
 figure_path <- paste(path, "Amplification.png", sep="") 
@@ -18,6 +24,26 @@ standard_curve_result = read.csv(standard_curve_path, sep=",", header=TRUE)
 slope <-   sprintf("%#.1f", standard_curve_result$Slope)
 reaction_efficiency <- round(standard_curve_result$Efficiency..)
 r_2_value <- sprintf("%#.2f", standard_curve_result$R.2)   
+
+if (round(standard_curve_result$Slope, digits=1) >= -3.6 && round(standard_curve_result$Slope, digits=1) <= -3.1){
+	slope_status = "\\textcolor{darkgreen}{PASS}"
+} else {
+	slope_status = "\\textcolor{orange}{ALERT}"
+}
+
+if (reaction_efficiency >= 90 && reaction_efficiency <= 110){
+	reaction_efficiency_status = "\\textcolor{darkgreen}{PASS}"
+} else {
+	reaction_efficiency_status = "\\textcolor{orange}{ALERT}"
+}
+
+if (round(standard_curve_result$R.2, digits=2) >= 0.99){
+	r_2_status = "\\textcolor{darkgreen}{PASS}"
+} else {
+	r_2_status = "\\textcolor{orange}{ALERT}"
+}
+
+
 
 quantification_result_path = paste(path, " Quantification Cq Results.csv", sep="")
 
@@ -47,6 +73,53 @@ quantification_result <- quantification_result %>%
   mutate(delta = ifelse(row_number() == 1, sprintf("%#.2f", delta), "")) %>%
   ungroup()
 
+quantification_result <- quantification_result %>%
+  group_by(Type) %>%
+  mutate(average = mean(`Ct Value`)) %>%
+  ungroup()
+
+quantification_result <- quantification_result %>%
+  group_by(Type) %>%
+  mutate(average = ifelse(row_number() == 1, sprintf("%#.2f", average), "")) %>%
+  ungroup()
+
+df <- quantification_result
+
+df$val_num <- suppressWarnings(as.numeric(df$average))
+
+# Create result column
+df$result <- df$val_num
+
+for (i in 1:(nrow(df))) {
+  # Only process non-NA (non-empty) values
+  if (!is.na(df$val_num[i])) {
+    
+    # Search for the next non-NA value
+    j <- i + 1
+    while (j <= nrow(df) && is.na(df$val_num[j])) {
+      j <- j + 1
+    }
+
+    # If we found a valid next value, subtract
+    if (j <= nrow(df)) {
+      df$result[i] <- sprintf("%#.2f", df$val_num[j] - df$val_num[i])
+    } else {
+      df$result[i] <- ""
+    }
+  } else {
+    df$result[i] <- ""
+  }
+}
+
+df <- df %>% select(-val_num)
+
+df <- df %>% select(-average)
+
+
+quantification_result <- df 
+
+
+
 #quantification_result <- quantification_result %>%
 #  mutate(`Given Concentration` = ifelse(`Given Concentration` == "NaN", "", `Given Concentration`) )
 
@@ -54,10 +127,15 @@ quantification_result <- quantification_result %>%
 quantification_result$concentration <- ifelse(quantification_result$`Ct Value` == "NaN", "", round( 10^((quantification_result$`Ct Value` - B) / M))) 
 
 quantification_result$`Ct Value` = ifelse(quantification_result$`Ct Value` == "NaN", "", sprintf("%#.2f",quantification_result$`Ct Value`))
- 
+
+
 quantification_result$delta = ifelse(quantification_result$delta == "NaN",  "", quantification_result$delta)
 
-quantification_result$`Given Concentration` = ifelse(quantification_result$`Given Concentration` == "NaN",  "", quantification_result$`Given Concentration`)
+quantification_result$`Given Concentration` = ifelse(quantification_result$`Given Concentration` == "NaN",  "", format(quantification_result$`Given Concentration`, scientific = FALSE))
+
+quantification_result <- quantification_result[, c(1, 2, 3, 4, 8, 5, 6, 7)]
+
+colnames <- c("Well", "Sample", "Type", "Given Concentration", "Calculated Concentration", "Ct Value", "$\\Delta T$ of Replicates", "$\\Delta T$")
 
 ```
 \textbf{\underline{Standard Curve (Set 1)}}
@@ -77,10 +155,10 @@ Machine used: & `r machine` \\
 \hline
 Parameter & Results & QC Status \\
 \hline
-Threshold &       &           \\
-Slope     &  `r slope`       &           \\
-Reaction efficiency &  `r reaction_efficiency`  &        \\
-$R^2$ Value   &   `r r_2_value`      &           \\
+Threshold &       &     -    \\
+Slope     &  `r slope`       &   `r slope_status`        \\
+Reaction efficiency &  `r reaction_efficiency`  &  `r reaction_efficiency_status`      \\
+$R^2$ Value   &   `r r_2_value`      &      `r r_2_status`     \\
 \hline
 \end{tabular} 
 
@@ -92,8 +170,9 @@ $R^2$ Value   &   `r r_2_value`      &           \\
     \label{fig:yourlabel}
 \end{figure}
 
-```{r fig1, fig.width=18, fig.align="center", echo=FALSE}
-kable(quantification_result, row.names = FALSE )  
+```{r fig1, fig.align="center", echo=FALSE}
+kable(quantification_result, col.names = colnames, booktabs = TRUE, escape = FALSE) 
+   
 
 ```
 
@@ -104,9 +183,9 @@ kable(quantification_result, row.names = FALSE )
 \hline
 \textbf{No.} & \textbf{Quality Control Criteria} & \textbf{QC Status} \\
 \hline
-1   & Slope between -3.1 and -3.6 &        \\
-2   & Reaction Efficiency 90\%-110\% &       \\
-3   & $R^2$ value: $\geq$0.99     &       \\
+1   & Slope between -3.1 and -3.6 &     `r slope_status`   \\
+2   & Reaction Efficiency 90\%-110\% &  `r reaction_efficiency_status`     \\
+3   & $R^2$ value: $\geq$0.99     &     `r r_2_status`  \\
 4   & $\Delta$Ct of replicates within $\pm$1.5 & \\
 5   & $\Delta$Ct of Average Ct between consecutive Standards: 3.1 to 3.6 & \\
 6   & Lowest Ct of NTC $\geq$3.0 Ct from highest Ct of Standard 6       & \\
@@ -119,4 +198,13 @@ kable(quantification_result, row.names = FALSE )
 
 
 
+```{r}
 
+
+df <- data.frame(Name = c("Alice", "$\\Delta$Bob"),
+                 Score = c(90, 85))
+
+kable(df, format = "latex", booktabs = TRUE, 
+      align = c("p{5cm}", "p{3cm}"))
+
+``` 

@@ -4,6 +4,7 @@ library(rmarkdown)
 library(knitr)
 library(flextable) 
 library(dplyr)
+library(kableExtra) 
 
 #performed_by = run_by_question()
 
