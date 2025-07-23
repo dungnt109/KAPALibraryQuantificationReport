@@ -47,43 +47,42 @@ if (round(standard_curve_result$R.2, digits=2) >= 0.99){
 
 quantification_result_path = paste(path, " Quantification Cq Results.csv", sep="")
 
-quantification_result = read.csv(quantification_result_path, sep=",", header=TRUE)
+df = read.csv(quantification_result_path, sep=",", header=TRUE)
 
-quantification_result = quantification_result[ , -c(1, 3, 4, 7, 9, 10, 12, 13, 14, 15, 16)]
+df = df[ , -c(1, 3, 4, 7, 9, 10, 12, 13, 14, 15, 16)]
 
-quantification_result <- quantification_result[, c(1, 3, 2, 5, 4)]
+df <- df[, c(1, 3, 2, 5, 4)]
 
 
-colnames(quantification_result) <- c("Well", "Sample", "Type", "Given Concentration", "Ct Value")
+colnames(df) <- c("Well", "Sample", "Type", "Given Concentration", "Ct Value")
 
 B <- standard_curve_result$Y.Intercept 
 M <- standard_curve_result$Slope
 
-quantification_result <- quantification_result[order(quantification_result$Type), ]
+df <- df[order(df$Type), ]
 
-quantification_result <- quantification_result[order(quantification_result$Type == "NTC"), ]
+df <- df[order(df$Type == "NTC"), ]
 
-quantification_result <- quantification_result %>%
+df <- df %>%
   group_by(Type) %>%
-  mutate(delta = abs(max(`Ct Value`) - min(`Ct Value`))) %>%
+  mutate(replicate = abs(max(`Ct Value`) - min(`Ct Value`))) %>%
   ungroup()
 
-quantification_result <- quantification_result %>%
+df <- df %>%
   group_by(Type) %>%
-  mutate(delta = ifelse(row_number() == 1, sprintf("%#.2f", delta), "")) %>%
+  mutate(replicate = ifelse(row_number() == 1, sprintf("%#.2f", replicate), "")) %>%
   ungroup()
 
-quantification_result <- quantification_result %>%
+df <- df %>%
   group_by(Type) %>%
   mutate(average = mean(`Ct Value`)) %>%
   ungroup()
 
-quantification_result <- quantification_result %>%
+df <- df %>%
   group_by(Type) %>%
   mutate(average = ifelse(row_number() == 1, sprintf("%#.2f", average), "")) %>%
   ungroup()
 
-df <- quantification_result
 
 df$val_num <- suppressWarnings(as.numeric(df$average))
 
@@ -116,26 +115,47 @@ df <- df %>% select(-val_num)
 df <- df %>% select(-average)
 
 
-quantification_result <- df 
+df$concentration <- ifelse(df$`Ct Value` == "NaN", "", round( 10^((df$`Ct Value` - B) / M))) 
+
+df$`Ct Value` = ifelse(df$`Ct Value` == "NaN", "", sprintf("%#.2f",df$`Ct Value`))
+
+df$replicate = ifelse(df$replicate == "NaN",  "", df$replicate)
+
+df$`Given Concentration` = ifelse(df$`Given Concentration` == "NaN",  "", format(df$`Given Concentration`, scientific = FALSE))
+
+df <- df[, c(1, 2, 3, 4, 8, 5, 6, 7)]
+
+colnames <- c("\\makecell[l]{Well}", "\\makecell[l]{Sample}", "\\makecell[l]{Type}", "\\makecell[l]{Given\\\\Concentration\\\\(copies)}", "\\makecell[l]{Calculated\\\\Concentration\\\\(copies)}", "\\makecell[l]{Ct\\\\Value}", "\\makecell[l]{$\\Delta Ct$ of\\\\Replicates}", "\\makecell[l]{$\\Delta Ct$ of\\\\Average Ct}")
+
+numeric_replicates <- suppressWarnings(as.numeric(df$replicate))
+
+valid_replicates <- numeric_replicates[!is.na(numeric_replicates)]
+
+if (all(valid_replicates >= -1.5 & valid_replicates <= 1.5)){
+	
+	replicate_status <- "\\textcolor{darkgreen}{PASS}"
+
+} else {
+	
+	replicate_status <- "\\textcolor{orange}{ALERT}"
+
+}
 
 
+numeric_averages <- suppressWarnings(as.numeric(df$average))
 
-#quantification_result <- quantification_result %>%
-#  mutate(`Given Concentration` = ifelse(`Given Concentration` == "NaN", "", `Given Concentration`) )
+valid_averages <- numeric_averages[!is.na(numeric_averages)]
 
+if (all(valid_averages >= 3.1 & valid_averages <= 3.6 )){
+	
+	replicate_average <- "\\textcolor{darkgreen}{PASS}"
 
-quantification_result$concentration <- ifelse(quantification_result$`Ct Value` == "NaN", "", round( 10^((quantification_result$`Ct Value` - B) / M))) 
+} else {
+	
+	replicate_average <- "\\textcolor{orange}{ALERT}"
 
-quantification_result$`Ct Value` = ifelse(quantification_result$`Ct Value` == "NaN", "", sprintf("%#.2f",quantification_result$`Ct Value`))
+}
 
-
-quantification_result$delta = ifelse(quantification_result$delta == "NaN",  "", quantification_result$delta)
-
-quantification_result$`Given Concentration` = ifelse(quantification_result$`Given Concentration` == "NaN",  "", format(quantification_result$`Given Concentration`, scientific = FALSE))
-
-quantification_result <- quantification_result[, c(1, 2, 3, 4, 8, 5, 6, 7)]
-
-colnames <- c("\\makecell[l]{Well}", "\\makecell[l]{Sample}", "\\makecell[l]{Type}", "\\makecell[l]{Given\\\\Concentration}", "\\makecell[l]{Calculated\\\\Concentration}", "\\makecell[l]{Ct\\\\Value}", "\\makecell[l]{$\\Delta Ct$ of\\\\Replicates}", "\\makecell[l]{$\\Delta Ct$ of\\\\Averages}")
 
 ```
 \textbf{\underline{Standard Curve (Set 1)}}
@@ -173,7 +193,7 @@ $R^2$ Value   &   `r r_2_value`      &      `r r_2_status`     \\
 ```{r fig1, fig.align="center", echo = FALSE}
 
  
-kbl(quantification_result,
+kbl(df,
     format = "latex",
     booktabs = TRUE,
     escape = FALSE,
@@ -181,10 +201,12 @@ kbl(quantification_result,
     align = "l") %>%
   column_spec(1, width = "1cm") %>%
   column_spec(2, width = "4cm") 
- 
+
 
 
 ```
+
+
 
 \textbf{Quality Control (QC) Checklist}
 
@@ -196,8 +218,8 @@ kbl(quantification_result,
 1   & Slope between -3.1 and -3.6 &     `r slope_status`   \\
 2   & Reaction Efficiency 90\%-110\% &  `r reaction_efficiency_status`     \\
 3   & $R^2$ value: $\geq$0.99     &     `r r_2_status`  \\
-4   & $\Delta$Ct of replicates within $\pm$1.5 & \\
-5   & $\Delta$Ct of Average Ct between consecutive Standards: 3.1 to 3.6 & \\
+4   & $\Delta$Ct of replicates within $\pm$1.5 &   `r replicate_status` \\
+5   & $\Delta$Ct of Average Ct between consecutive Standards: 3.1 to 3.6 & `r replicate_average` \\
 6   & Lowest Ct of NTC $\geq$3.0 Ct from highest Ct of Standard 6       & \\
 \hline
 \multicolumn{2}{|l}{Overall QC Status}   & \\
