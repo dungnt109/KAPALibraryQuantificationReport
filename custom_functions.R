@@ -113,6 +113,21 @@ df <- df %>% select(-val_num)
 
 df <- df %>% select(-average)
 
+ntc = df$`Ct Value`[df$Type=="NTC"]
+std6 = df$`Ct Value`[df$Type=="Std-6"]
+
+#ntc_min = min(suppressWarnings(as.numeric(ntc)), na.rm =TRUE)
+#std6_max = max(suppressWarnings(as.numeric(std6)), na.rm =TRUE)
+
+ntc_has_numeric = any(!is.na(suppressWarnings(as.numeric(unlist(ntc)))))
+
+std6_has_numeric = any(!is.na(suppressWarnings(as.numeric(unlist(std6)))))
+
+print(ntc)
+print(ntc_has_numeric)
+print(std6)
+print(std6_has_numeric)
+
 
 df$concentration <- ifelse(df$`Ct Value` == "NaN", "", round( 10^((df$`Ct Value` - B) / M))) 
 
@@ -157,7 +172,9 @@ if (all(valid_averages >= 3.1 & valid_averages <= 3.6 )){
 }
 
 
-knitr::knit_child("template1.Rmd", quiet = TRUE, envir = environment())
+
+
+#knitr::knit_child("template1.Rmd", quiet = TRUE, envir = environment())
 
 
 }
