@@ -139,7 +139,14 @@ df$`Given Concentration` = ifelse(df$`Given Concentration` == "NaN",  "", format
 
 df <- df[, c(1, 2, 3, 4, 8, 5, 6, 7)]
 
-colnames <- c("\\makecell[l]{Well}", "\\makecell[l]{Sample}", "\\makecell[l]{Type}", "\\makecell[l]{Given\\\\Concentration\\\\(copies)}", "\\makecell[l]{Calculated\\\\Concentration\\\\(copies)}", "\\makecell[l]{Ct\\\\Value}", "\\makecell[l]{$\\Delta Ct$ of\\\\Replicates}", "\\makecell[l]{$\\Delta Ct$ of\\\\Average Ct}")
+colnames <- c("\\makecell[l]{Well}", 
+	          "\\makecell[l]{Sample}", 
+	          "\\makecell[l]{Type}", 
+	          "\\makecell[l]{Given\\\\Concentration\\\\(copies)}", 
+	          "\\makecell[l]{Calculated\\\\Concentration\\\\(copies)}", 
+	          "\\makecell[l]{Ct\\\\Value}", 
+	          "\\makecell[l]{$\\Delta Ct$ of\\\\Replicates}", 
+	          "\\makecell[l]{$\\Delta Ct$ of\\\\Average Ct}")
 
 numeric_replicates <- suppressWarnings(as.numeric(df$replicate))
 
@@ -172,9 +179,10 @@ if (all(valid_averages >= 3.1 & valid_averages <= 3.6 )){
 }
 
 
+summary <- rbind(summary, list(nrow(summary)+1, "", "", "", "", "", "", ""))
 
 
-#knitr::knit_child("template1.Rmd", quiet = TRUE, envir = environment())
-
+return(list(latex=knitr::knit_child("template1.Rmd", quiet = TRUE, envir = environment()), summary = summary))
+#return ("hello")
 
 }

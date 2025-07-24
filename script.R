@@ -13,9 +13,15 @@ library(kableExtra)
 
 #run_no = run_no_question()
 
-runs <- data.frame(matrix(nrow = 0, ncol = 1))
+summary <- data.frame(matrix(nrow = 0, ncol = 8))
 
-colnames(runs) <- c("Run Type")
+
+
+
+
+
+
+print(summary)
 
 analysis_type = analysis_question()
 
@@ -23,6 +29,5 @@ analysis_type = analysis_question()
 
 file_path = folder_chooser()
 
-render_template1(file_path)
 
-#render("./main.Rmd", params = list(), output_file = "1.pdf") 
+render("./main.Rmd", params = list(), output_file = "1.pdf") 

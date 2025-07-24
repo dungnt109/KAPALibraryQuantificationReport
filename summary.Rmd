@@ -1,6 +1,20 @@
 \newpage 
 \textbf{\underline{KAPA Library Quantification Summary Report}}
 
+```{r summary, summary.align="center", echo = FALSE}
+
+colnames(summary) <- c("No.", "Run Date", "Run Type", "Threshold", "Lot No", "Opening Date", "No", "Overall QC Status")
+ 
+kbl(summary,
+    format = "latex",
+    booktabs = TRUE,
+    escape = FALSE,
+    align = "l") 
+
+
+
+```
+
 \textbf{Total Number of Samples:}
 
 \textbf{Run Number:}

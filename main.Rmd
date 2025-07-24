@@ -8,8 +8,8 @@ fig_width: 8
 fig_height: 6
 output:
   pdf_document:
-    keep_tex: false
-    toc: false
+    keep_tex: true
+    toc: false  
     highlight: zenburn
 header-includes:
 - \usepackage{fancyhdr}
@@ -46,6 +46,7 @@ header-includes:
 \large\textbf{\underline{`r analysis_type` }}
 
 
+
 ```{r results='asis', echo = FALSE, warning = FALSE, message=FALSE}
 
 templates <- c("template1.Rmd", "template2.Rmd", "template3.Rmd")
@@ -58,9 +59,12 @@ text <- "hello"
 #  		cat(knitr::knit_child(template, quiet = TRUE))
 #	}
 #}
+result = render_template1(file_path)
 
-cat(render_template1(file_path))
-   
+cat(result$latex)
+
+summary <- result$summary 
+
 
 cat(knitr::knit_child("summary.Rmd", quiet = TRUE))
 
