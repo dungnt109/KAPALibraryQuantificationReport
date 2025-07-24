@@ -3,7 +3,14 @@
 
 ```{r summary, summary.align="center", echo = FALSE}
 
-colnames(summary) <- c("No.", "Run Date", "Run Type", "Threshold", "Lot No", "Opening Date", "No", "Overall QC Status")
+colnames(summary) <- c("\\makecell[l]{No.}", 
+                       "\\makecell[l]{Run Date}", 
+                       "\\makecell[l]{Run Type}", 
+                       "\\makecell[l]{Threshold}", 
+                       "\\makecell[l]{Lot No. of KAPA\\\\Quantification Kit}", 
+                       "\\makecell[l]{Opening Date of KAPA\\\\Quantification Kit}", 
+                       "\\makecell[l]{No. of\\\\Samples}", 
+                       "\\makecell[l]{Overall\\\\QC Status}")
  
 kbl(summary,
     format = "latex",
