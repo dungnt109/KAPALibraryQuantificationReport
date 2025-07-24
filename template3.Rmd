@@ -1,31 +1,26 @@
 \newpage
-\textbf{`r template`}
 
-\textbf{\underline{Standard Curve (Set 2)}}
+\textbf{\underline{Samples (Set 2)}}
 
 \textbf{Experiment Information}
 
 \begin{tabular}{l l}
-File name: & B1 \\
-Run started & B5 \\
-Run ended & B6 \\
-Machine used: & Machine \\
+File name: &  `r file_name` \\
+Run started & `r run_started` \\
+Run ended & `r run_ended` \\
+Machine used: & `r machine` \\
 \end{tabular}
 
-\textbf{Quantification Information}
+File name of reference Standard Curve: 
 
-\begin{tabular}{|c | c | c |}
-\hline
-Parameter & Results & QC Status \\
-\hline
-Threshold &         &           \\
-Slope     &         &           \\
-Reaction efficiency &  &        \\
-$R^2$ Value   &         &           \\
-\hline
-\end{tabular} 
 
 \textbf{Quantification Results} 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{`r figure_path`}
+    \label{fig:yourlabel}
+\end{figure}
 
 \textbf{Quality Control (QC) Checklist}
 
@@ -34,17 +29,14 @@ $R^2$ Value   &         &           \\
 \hline
 \textbf{No.} & \textbf{Quality Control Criteria} & \textbf{QC Status} \\
 \hline
-1   & Slope between -3.1 and -3.6 &        \\
-2   & Reaction Efficiency 90\%-110\% &       \\
-3   & $R^2$ value: $\geq$0.99     &       \\
-4   & $\Delta$Ct of replicates within $\pm$1.5 & \\
-5   & $\Delta$Ct of Average Ct between consecutive Standards: 3.1 to 3.6 & \\
-6   & Lowest Ct of NTC $\geq$3.0 Ct from highest Ct of Standard 6       & \\
+1   & $\Delta$Ct of Average Ct for Standard 3 between Standard Curve and Import Curve within $\pm$1.5 &        \\
+2   & $\Delta$Ct of Average Ct for Standard 6 between Standard Curve and Import Curve within $\pm$1.5 &        \\
+3   & Lowest Ct of NTC $\geq$3.0 Ct from highest Ct of Standard 6 &        \\
+4   & $\Delta$Ct of replicates within $\pm$1.5  & \\
 \hline
 \multicolumn{2}{|l}{Overall QC Status}   & \\
 \hline
 \end{tabularx}
-
 
 
 

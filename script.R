@@ -17,17 +17,14 @@ summary <- data.frame(matrix(nrow = 0, ncol = 8))
 
 
 
-
-
-
-
-print(summary)
-
 analysis_type = analysis_question()
 
 #run_type = run_type_question()
 
-file_path = folder_chooser()
+file_path1 = "/home/dungnt/Documents/Repository/QuantificationReport/Sample results folder/2024-07-25; Lot 0000649535_20250701 - ALB MNC 0624 Std Curve, 4mM - Run Information.csv"
+file_path3 = folder_chooser()
 
+
+#render_template3(file_path)
 
 render("./main.Rmd", params = list(), output_file = "1.pdf") 

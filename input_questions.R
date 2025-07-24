@@ -89,7 +89,8 @@ folder_chooser <- function(){
 
 	cat("\nChoose a folder:\n")
 	#folder <- file.choose(new = FALSE)
-	folder <- "/home/dungnt/Documents/Repository/QuantificationReport/Sample results folder/2024-07-25; Lot 0000649535_20250701 - ALB MNC 0624 Std Curve, 4mM - Run Information.csv"
+	#folder <- "/home/dungnt/Documents/Repository/QuantificationReport/Sample results folder/2024-07-25; Lot 0000649535_20250701 - ALB MNC 0624 Std Curve, 4mM - Run Information.csv"
+	folder <- "/home/dungnt/Documents/Repository/QuantificationReport/Import Run Data/2024-11-13; Lot 0000649535_20250701 - ALB Import for RGQ vs CFX Validation, 4mM - Run Information.csv"
 	return(folder)
 
 }

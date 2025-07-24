@@ -59,11 +59,13 @@ text <- "hello"
 #  		cat(knitr::knit_child(template, quiet = TRUE))
 #	}
 #}
-result = render_template1(file_path)
+result1 = render_template1(file_path1)
+result3 = render_template3(file_path3)
 
-cat(result$latex)
+cat(result1$latex)
+cat(result3$latex)
 
-summary <- result$summary 
+summary <- result1$summary 
 
 
 cat(knitr::knit_child("summary.Rmd", quiet = TRUE))
