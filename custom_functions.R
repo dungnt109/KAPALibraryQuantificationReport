@@ -20,7 +20,38 @@ render_template3 <- function(file_path){
 
 	figure_path <- paste(path, "Amplification.png", sep="") 
 
-	
+	quantification_result_path = paste(path, " Quantification Cq Results.csv", sep="")
+
+	df = read.csv(quantification_result_path, sep=",", header=TRUE)
+
+	df = df[ , -c(1, 3, 4, 7, 9, 10, 12, 13, 14, 15, 16)]
+
+	df <- df[, c(1, 3, 2, 5, 4)]
+
+
+	colnames(df) <- c("Well", "Sample", "Type", "Given Concentration", "Ct Value")
+
+	df <- df[order(df$Type), ]
+
+	df <- df[order(df$Type == "NTC"), ]
+
+	df <- df[order(df$Type == "Unkn"), ]
+
+	subset <- df[df$Type == "Unkn", ]
+
+	subset$Sample_order <- match(subset$Sample, unique(subset$Sample))
+
+	subset_sorted <- subset[order(subset$Sample_order), ]
+
+	subset_sorted$Sample_order <- NULL
+
+	#subset_sorted <- subset[order(subset$Sample), ]
+
+	subset_other <- df[df$Type != "Unkn", ]
+
+	df <- rbind(subset_other, subset_sorted)
+
+
 
 	summary <- rbind(summary, list(nrow(summary)+1, "", "", "", "", "", "", ""))
 
@@ -31,22 +62,23 @@ render_template3 <- function(file_path){
 
 render_template1 <- function(file_path){
 
-data <- read.csv(file_path, sep=",", header=FALSE)
-file_name = paste(data[1, 2], data[1, 3], sep="")
-file_name = gsub("_", "\\\\_", file_name)
-run_started = data[5, 2]
-run_ended = data[6, 2]
-machine = data[11, 2]
+#Experiment Information
+	data <- read.csv(file_path, sep=",", header=FALSE)
+	file_name = paste(data[1, 2], data[1, 3], sep="")
+	file_name = gsub("_", "\\\\_", file_name)
+	run_started = data[5, 2]
+	run_ended = data[6, 2]
+	machine = data[11, 2]
 
-if (machine == "CT019934"){
-	machine = "CFX96 (1)"
-} else if (machine == "CT020097"){
-	machine = "CFX96 (2)"
-}
+	if (machine == "CT019934"){
+		machine = "CFX96 (1)"
+	} else if (machine == "CT020097"){
+		machine = "CFX96 (2)"
+	}
+
+#Quantification Information
 
 path = sub("Run Information.*", "", file_path)
-
-figure_path <- paste(path, "Amplification.png", sep="") 
 
 standard_curve_path = paste(path, " Standard Curve Results.csv", sep="")
 
@@ -74,6 +106,12 @@ if (round(standard_curve_result$R.2, digits=2) >= 0.99){
 	r_2_status = "\\textcolor{orange}{ALERT}"
 }
 
+#Quantification Results 
+## figure 
+
+figure_path <- paste(path, "Amplification.png", sep="") 
+
+## Table 
 
 quantification_result_path = paste(path, " Quantification Cq Results.csv", sep="")
 
@@ -98,10 +136,14 @@ df <- df %>%
   mutate(replicate = abs(max(`Ct Value`) - min(`Ct Value`))) %>%
   ungroup()
 
+print(df$replicate)
+
 df <- df %>%
   group_by(Type) %>%
-  mutate(replicate = ifelse(row_number() == 1, sprintf("%#.2f", replicate), "")) %>%
+  mutate(replicate = ifelse(row_number() == 1, replicate, NaN)) %>%
   ungroup()
+
+ print(df$replicate)
 
 df <- df %>%
   group_by(Type) %>%
@@ -110,7 +152,7 @@ df <- df %>%
 
 df <- df %>%
   group_by(Type) %>%
-  mutate(average = ifelse(row_number() == 1, average, "")) %>%
+  mutate(average = ifelse(row_number() == 1, average, NaN)) %>%
   ungroup()
 
 
@@ -131,12 +173,12 @@ for (i in 1:(nrow(df))) {
 
     # If we found a valid next value, subtract
     if (j <= nrow(df)) {
-      df$delta_average[i] <- sprintf("%#.2f", df$val_num[j] - df$val_num[i])
+      df$delta_average[i] <- df$val_num[j] - df$val_num[i]
     } else {
-      df$delta_average[i] <- ""
+      df$delta_average[i] <- NaN 
     }
   } else {
-    df$delta_average[i] <- ""
+    df$delta_average[i] <- NaN 
   }
 }
 
@@ -173,17 +215,20 @@ if (!ntc_has_numeric) {
 
 }
 
+display <- df 
+
+display$concentration <- ifelse(is.na(as.numeric(df$`Ct Value`)), "", round( 10^((df$`Ct Value` - B) / M))) 
+
+display$`Ct Value` = ifelse(is.na(as.numeric(df$`Ct Value`)), "", sprintf("%#.2f",df$`Ct Value`))
 
 
-df$concentration <- ifelse(df$`Ct Value` == "NaN", "", round( 10^((df$`Ct Value` - B) / M))) 
+display$replicate = ifelse(is.na(as.numeric(df$replicate)),  "", sprintf("%#.2f", df$replicate) )
 
-df$`Ct Value` = ifelse(df$`Ct Value` == "NaN", "", sprintf("%#.2f",df$`Ct Value`))
+display$delta_average = ifelse(is.na(as.numeric(df$delta_average)),  "", sprintf("%#.2f", df$delta_average) )
 
-df$replicate = ifelse(df$replicate == "NaN",  "", df$replicate)
+display$`Given Concentration` = ifelse(is.na(as.numeric(df$`Given Concentration`)),  "", format(df$`Given Concentration`, scientific = FALSE))
 
-df$`Given Concentration` = ifelse(df$`Given Concentration` == "NaN",  "", format(df$`Given Concentration`, scientific = FALSE))
-
-df <- df[, c(1, 2, 3, 4, 8, 5, 6, 7)]
+display <- display[, c(1, 2, 3, 4, 8, 5, 6, 7)]
 
 colnames <- c("\\makecell[l]{Well}", 
 	          "\\makecell[l]{Sample}", 

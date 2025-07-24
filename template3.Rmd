@@ -22,6 +22,18 @@ File name of reference Standard Curve:
     \label{fig:yourlabel}
 \end{figure}
 
+```{r, fig.align="center", echo = FALSE}
+
+ 
+kbl(df,
+    format = "latex",
+    booktabs = TRUE,
+    escape = FALSE,
+    row.names = FALSE, 
+    align = "l") 
+
+```
+
 \textbf{Quality Control (QC) Checklist}
 
 

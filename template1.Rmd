@@ -37,7 +37,7 @@ $R^2$ Value   &   `r r_2_value`      &      `r r_2_status`     \\
 ```{r fig1, fig.align="center", echo = FALSE}
 
  
-kbl(df,
+kbl(display,
     format = "latex",
     booktabs = TRUE,
     escape = FALSE,
