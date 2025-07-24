@@ -116,17 +116,32 @@ df <- df %>% select(-average)
 ntc = df$`Ct Value`[df$Type=="NTC"]
 std6 = df$`Ct Value`[df$Type=="Std-6"]
 
-#ntc_min = min(suppressWarnings(as.numeric(ntc)), na.rm =TRUE)
-#std6_max = max(suppressWarnings(as.numeric(std6)), na.rm =TRUE)
+
 
 ntc_has_numeric = any(!is.na(suppressWarnings(as.numeric(unlist(ntc)))))
 
 std6_has_numeric = any(!is.na(suppressWarnings(as.numeric(unlist(std6)))))
 
-print(ntc)
-print(ntc_has_numeric)
-print(std6)
-print(std6_has_numeric)
+if (!ntc_has_numeric) {
+	status6 <- "\\textcolor{darkgreen}{PASS}"
+} else {
+
+	if (!std6_has_numeric){
+		status6 <- "\\textcolor{orange}{ALERT}"
+	} else {
+		ntc_min = min(suppressWarnings(as.numeric(ntc)), na.rm =TRUE)
+		std6_max = max(suppressWarnings(as.numeric(std6)), na.rm =TRUE)
+
+		if (ntc_min - std6_max >= 3){
+				status6 <- "\\textcolor{darkgreen}{PASS}"
+			} else {
+				status6 <- "\\textcolor{orange}{ALERT}"
+			}
+	}
+
+
+}
+
 
 
 df$concentration <- ifelse(df$`Ct Value` == "NaN", "", round( 10^((df$`Ct Value` - B) / M))) 
@@ -176,6 +191,18 @@ if (all(valid_averages >= 3.1 & valid_averages <= 3.6 )){
 	
 	average_status <- "\\textcolor{orange}{ALERT}"
 
+}
+
+overall_status = all(grepl("PASS", c(slope_status, 
+	                                 reaction_efficiency_status, 
+	                                 r_2_status, 
+	                                 replicate_status, 
+	                                 average_status, 
+	                                 status6)))
+if (overall_status){
+	overall_qc_status <- "\\textcolor{darkgreen}{PASS}"
+} else {
+	overall_qc_status <- "\\textcolor{orange}{ALERT}"
 }
 
 

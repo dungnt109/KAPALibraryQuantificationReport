@@ -64,8 +64,8 @@ kbl(df,
 3   & $R^2$ value: $\geq$0.99     &     `r r_2_status`  \\
 4   & $\Delta$Ct of replicates within $\pm$1.5 &   `r replicate_status` \\
 5   & $\Delta$Ct of Average Ct between consecutive Standards: 3.1 to 3.6 & `r average_status` \\
-6   & Lowest Ct of NTC $\geq$3.0 Ct from highest Ct of Standard 6       & \\
+6   & Lowest Ct of NTC $\geq$3.0 Ct from highest Ct of Standard 6       &  `r status6` \\
 \hline
-\multicolumn{2}{|l}{Overall QC Status}   & \\
+\multicolumn{2}{|l}{Overall QC Status}   &  `r overall_qc_status` \\
 \hline
 \end{tabularx}
