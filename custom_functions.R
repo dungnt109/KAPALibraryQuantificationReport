@@ -131,7 +131,7 @@ add_delta_average_column <- function(df){
 	df$val_num <- suppressWarnings(as.numeric(df$average))
 
 	# Create result column
-	df$delta_average <- df$val_num
+	df$delta_average <- NA  
 
 	for (i in 1:(nrow(df))) {
 	  # Only process non-NA (non-empty) values
@@ -147,10 +147,10 @@ add_delta_average_column <- function(df){
 	    if (j <= nrow(df)) {
 	      df$delta_average[i] <- df$val_num[j] - df$val_num[i]
 	    } else {
-	      df$delta_average[i] <- NaN 
+	      df$delta_average[i] <- NA  
 	    }
 	  } else {
-	    df$delta_average[i] <- NaN 
+	    df$delta_average[i] <- NA
 	  }
 	}
 
@@ -345,6 +345,6 @@ summary <- rbind(summary, list(nrow(summary)+1, "", "", "", "", "", "", ""))
 
 
 return(list(latex=knitr::knit_child("template1.Rmd", quiet = TRUE, envir = environment()), summary = summary))
-#return ("hello")
+
 
 }
