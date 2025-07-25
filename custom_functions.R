@@ -13,16 +13,7 @@ render_template3 <- function(file_path){
 
 	figure_path <- paste(path, "Amplification.png", sep="") 
 
-	quantification_result_path = paste(path, " Quantification Cq Results.csv", sep="")
-
-	df = read.csv(quantification_result_path, sep=",", header=TRUE)
-
-	df = df[ , -c(1, 3, 4, 7, 9, 10, 12, 13, 14, 15, 16)]
-
-	df <- df[, c(1, 3, 2, 5, 4)]
-
-
-	colnames(df) <- c("Well", "Sample", "Type", "Given Concentration", "Ct Value")
+	df <- get_quantification_result_df(file_path)
 
 	df <- df[order(df$Type), ]
 
@@ -43,6 +34,20 @@ render_template3 <- function(file_path){
 	subset_other <- df[df$Type != "Unkn", ]
 
 	df <- rbind(subset_other, subset_sorted)
+
+	df <- add_calculated_concentration_column(df, 1, 1)
+
+	df <- add_replicate_column(df)
+
+	df <- add_average_column(df)
+
+	df <- add_delta_average_column(df)
+
+	df <- df[, c(1, 2, 3, 4, 6, 5, 7, 8, 9)]
+
+
+	display = get_display_df(df)
+
 
 
 
@@ -67,6 +72,124 @@ get_experiment_information <- function(file_path){
 	}
 
 	list(file_name = file_name, run_started = run_started, run_ended = run_ended, machine = machine)
+}
+
+get_quantification_result_df <- function(file_path){
+	path = sub("Run Information.*", "", file_path)
+	quantification_result_path = paste(path, " Quantification Cq Results.csv", sep="")
+
+	df = read.csv(quantification_result_path, sep=",", header=TRUE)
+
+	df = df[ , -c(1, 3, 4, 7, 9, 10, 12, 13, 14, 15, 16)]
+
+	df <- df[, c(1, 3, 2, 5, 4)]
+
+
+	colnames(df) <- c("Well", "Sample", "Type", "Given Concentration", "Ct Value")
+
+	return(df)
+}
+
+add_calculated_concentration_column <- function(df, B, M){
+	df$concentration <- ifelse(is.na(as.numeric(df$`Ct Value`)), "", round( 10^((df$`Ct Value` - B) / M)))
+	return(df)
+}
+
+add_replicate_column <- function(df){
+
+	df <- df %>%
+	  group_by(Type) %>%
+	  mutate(replicate = abs(max(`Ct Value`) - min(`Ct Value`))) %>%
+	  ungroup()
+
+
+	df <- df %>%
+	  group_by(Type) %>%
+	  mutate(replicate = ifelse(row_number() == 1, replicate, NaN)) %>%
+	  ungroup()
+
+	return(df)
+
+}
+
+add_average_column <- function(df){
+
+	df <- df %>%
+	  group_by(Type) %>%
+	  mutate(average = mean(`Ct Value`)) %>%
+	  ungroup()
+
+	df <- df %>%
+	  group_by(Type) %>%
+	  mutate(average = ifelse(row_number() == 1, average, NaN)) %>%
+	  ungroup()
+
+	return(df)
+}
+
+add_delta_average_column <- function(df){
+	df$val_num <- suppressWarnings(as.numeric(df$average))
+
+	# Create result column
+	df$delta_average <- df$val_num
+
+	for (i in 1:(nrow(df))) {
+	  # Only process non-NA (non-empty) values
+	  if (!is.na(df$val_num[i])) {
+	    
+	    # Search for the next non-NA value
+	    j <- i + 1
+	    while (j <= nrow(df) && is.na(df$val_num[j])) {
+	      j <- j + 1
+	    }
+
+	    # If we found a valid next value, subtract
+	    if (j <= nrow(df)) {
+	      df$delta_average[i] <- df$val_num[j] - df$val_num[i]
+	    } else {
+	      df$delta_average[i] <- NaN 
+	    }
+	  } else {
+	    df$delta_average[i] <- NaN 
+	  }
+	}
+
+	df <- df %>% select(-val_num)
+
+	return(df)
+}
+
+get_display_df <- function(df){
+
+	display <- df 
+
+	display$concentration <- ifelse(is.na(as.numeric(df$`Ct Value`)), "", df$concentration) 
+
+	display$`Ct Value` = ifelse(is.na(as.numeric(df$`Ct Value`)), "", sprintf("%#.2f",df$`Ct Value`))
+
+
+	display$replicate = ifelse(is.na(as.numeric(df$replicate)),  "", sprintf("%#.2f", df$replicate) )
+
+	display$average = ifelse(is.na(as.numeric(df$average)),  "", sprintf("%#.2f", df$average) )
+
+	display$delta_average = ifelse(is.na(as.numeric(df$delta_average)),  "", sprintf("%#.2f", df$delta_average) )
+
+	display$`Given Concentration` = ifelse(is.na(as.numeric(df$`Given Concentration`)),  "", format(df$`Given Concentration`, scientific = FALSE))
+
+
+
+	colnames(display) <- c("\\makecell[l]{Well}", 
+		          "\\makecell[l]{Sample}", 
+		          "\\makecell[l]{Type}", 
+		          "\\makecell[l]{Given\\\\Concentration\\\\(copies)}", 
+		          "\\makecell[l]{Calculated\\\\Concentration\\\\(copies)}", 
+		          "\\makecell[l]{Ct\\\\Value}", 
+		          "\\makecell[l]{$\\Delta Ct$ of\\\\Replicates}", 
+		          "average",
+		          "\\makecell[l]{$\\Delta Ct$ of\\\\Average Ct}")
+
+	return (display)
+
 }
 
 render_template1 <- function(file_path){
@@ -118,16 +241,7 @@ figure_path <- paste(path, "Amplification.png", sep="")
 
 ## Table 
 
-quantification_result_path = paste(path, " Quantification Cq Results.csv", sep="")
-
-df = read.csv(quantification_result_path, sep=",", header=TRUE)
-
-df = df[ , -c(1, 3, 4, 7, 9, 10, 12, 13, 14, 15, 16)]
-
-df <- df[, c(1, 3, 2, 5, 4)]
-
-
-colnames(df) <- c("Well", "Sample", "Type", "Given Concentration", "Ct Value")
+df <- get_quantification_result_df(file_path)
 
 B <- standard_curve_result$Y.Intercept 
 M <- standard_curve_result$Slope
@@ -136,64 +250,27 @@ df <- df[order(df$Type), ]
 
 df <- df[order(df$Type == "NTC"), ]
 
-df <- df %>%
-  group_by(Type) %>%
-  mutate(replicate = abs(max(`Ct Value`) - min(`Ct Value`))) %>%
-  ungroup()
+df <- add_calculated_concentration_column(df, B, M)
 
-print(df$replicate)
+df <- add_replicate_column(df)
 
-df <- df %>%
-  group_by(Type) %>%
-  mutate(replicate = ifelse(row_number() == 1, replicate, NaN)) %>%
-  ungroup()
+df <- add_average_column(df)
 
- print(df$replicate)
+df <- add_delta_average_column(df)
 
-df <- df %>%
-  group_by(Type) %>%
-  mutate(average = mean(`Ct Value`)) %>%
-  ungroup()
-
-df <- df %>%
-  group_by(Type) %>%
-  mutate(average = ifelse(row_number() == 1, average, NaN)) %>%
-  ungroup()
+df <- df[, c(1, 2, 3, 4, 6, 5, 7, 8, 9)]
 
 
-df$val_num <- suppressWarnings(as.numeric(df$average))
+display = get_display_df(df)
 
-# Create result column
-df$delta_average <- df$val_num
+#display <- display %>% select(-average)
 
-for (i in 1:(nrow(df))) {
-  # Only process non-NA (non-empty) values
-  if (!is.na(df$val_num[i])) {
-    
-    # Search for the next non-NA value
-    j <- i + 1
-    while (j <= nrow(df) && is.na(df$val_num[j])) {
-      j <- j + 1
-    }
 
-    # If we found a valid next value, subtract
-    if (j <= nrow(df)) {
-      df$delta_average[i] <- df$val_num[j] - df$val_num[i]
-    } else {
-      df$delta_average[i] <- NaN 
-    }
-  } else {
-    df$delta_average[i] <- NaN 
-  }
-}
+#Quality Control Checklist
 
-df <- df %>% select(-val_num)
-
-df <- df %>% select(-average)
 
 ntc = df$`Ct Value`[df$Type=="NTC"]
 std6 = df$`Ct Value`[df$Type=="Std-6"]
-
 
 
 ntc_has_numeric = any(!is.na(suppressWarnings(as.numeric(unlist(ntc)))))
@@ -220,29 +297,6 @@ if (!ntc_has_numeric) {
 
 }
 
-display <- df 
-
-display$concentration <- ifelse(is.na(as.numeric(df$`Ct Value`)), "", round( 10^((df$`Ct Value` - B) / M))) 
-
-display$`Ct Value` = ifelse(is.na(as.numeric(df$`Ct Value`)), "", sprintf("%#.2f",df$`Ct Value`))
-
-
-display$replicate = ifelse(is.na(as.numeric(df$replicate)),  "", sprintf("%#.2f", df$replicate) )
-
-display$delta_average = ifelse(is.na(as.numeric(df$delta_average)),  "", sprintf("%#.2f", df$delta_average) )
-
-display$`Given Concentration` = ifelse(is.na(as.numeric(df$`Given Concentration`)),  "", format(df$`Given Concentration`, scientific = FALSE))
-
-display <- display[, c(1, 2, 3, 4, 8, 5, 6, 7)]
-
-colnames <- c("\\makecell[l]{Well}", 
-	          "\\makecell[l]{Sample}", 
-	          "\\makecell[l]{Type}", 
-	          "\\makecell[l]{Given\\\\Concentration\\\\(copies)}", 
-	          "\\makecell[l]{Calculated\\\\Concentration\\\\(copies)}", 
-	          "\\makecell[l]{Ct\\\\Value}", 
-	          "\\makecell[l]{$\\Delta Ct$ of\\\\Replicates}", 
-	          "\\makecell[l]{$\\Delta Ct$ of\\\\Average Ct}")
 
 numeric_replicates <- suppressWarnings(as.numeric(df$replicate))
 

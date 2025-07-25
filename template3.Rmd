@@ -25,7 +25,7 @@ File name of reference Standard Curve:
 ```{r, fig.align="center", echo = FALSE}
 
  
-kbl(df,
+kbl(display,
     format = "latex",
     booktabs = TRUE,
     escape = FALSE,
