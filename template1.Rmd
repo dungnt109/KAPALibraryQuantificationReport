@@ -41,9 +41,9 @@ kbl(display,
     format = "latex",
     booktabs = TRUE,
     escape = FALSE,
-    align = "l") %>%
-  column_spec(1, width = "1cm") %>%
-  column_spec(2, width = "4cm") 
+    align = "l", 
+    linesep = "") 
+
 
 
 

@@ -192,6 +192,14 @@ get_display_df <- function(df){
 
 }
 
+color_text <- function(text){
+	if (text == "PASS"){
+		return ("\\textcolor{darkgreen}{PASS}")
+	} else if (text == "ALERT"){
+		return ("\\textcolor{orange}{ALERT}")
+	}
+}
+
 render_template1 <- function(file_path){
 
 #Experiment Information
@@ -217,21 +225,21 @@ reaction_efficiency <- round(standard_curve_result$Efficiency..)
 r_2_value <- sprintf("%#.2f", standard_curve_result$R.2)   
 
 if (round(standard_curve_result$Slope, digits=1) >= -3.6 && round(standard_curve_result$Slope, digits=1) <= -3.1){
-	slope_status = "\\textcolor{darkgreen}{PASS}"
+	slope_status = color_text("PASS")
 } else {
-	slope_status = "\\textcolor{orange}{ALERT}"
+	slope_status = color_text("ALERT")
 }
 
 if (reaction_efficiency >= 90 && reaction_efficiency <= 110){
-	reaction_efficiency_status = "\\textcolor{darkgreen}{PASS}"
+	reaction_efficiency_status = color_text("PASS")
 } else {
-	reaction_efficiency_status = "\\textcolor{orange}{ALERT}"
+	reaction_efficiency_status = color_text("ALERT")
 }
 
 if (round(standard_curve_result$R.2, digits=2) >= 0.99){
-	r_2_status = "\\textcolor{darkgreen}{PASS}"
+	r_2_status = color_text("PASS")
 } else {
-	r_2_status = "\\textcolor{orange}{ALERT}"
+	r_2_status = color_text("ALERT")
 }
 
 #Quantification Results 
@@ -278,19 +286,19 @@ ntc_has_numeric = any(!is.na(suppressWarnings(as.numeric(unlist(ntc)))))
 std6_has_numeric = any(!is.na(suppressWarnings(as.numeric(unlist(std6)))))
 
 if (!ntc_has_numeric) {
-	status6 <- "\\textcolor{darkgreen}{PASS}"
+	status6 <- color_text("PASS")
 } else {
 
 	if (!std6_has_numeric){
-		status6 <- "\\textcolor{orange}{ALERT}"
+		status6 <- color_text("ALERT")
 	} else {
 		ntc_min = min(suppressWarnings(as.numeric(ntc)), na.rm =TRUE)
 		std6_max = max(suppressWarnings(as.numeric(std6)), na.rm =TRUE)
 
 		if (ntc_min - std6_max >= 3){
-				status6 <- "\\textcolor{darkgreen}{PASS}"
+				status6 <- color_text("PASS")
 			} else {
-				status6 <- "\\textcolor{orange}{ALERT}"
+				status6 <- color_text("ALERT")
 			}
 	}
 
@@ -305,11 +313,11 @@ valid_replicates <- numeric_replicates[!is.na(numeric_replicates)]
 
 if (all(valid_replicates >= -1.5 & valid_replicates <= 1.5)){
 	
-	replicate_status <- "\\textcolor{darkgreen}{PASS}"
+	replicate_status <- color_text("PASS")
 
 } else {
 	
-	replicate_status <- "\\textcolor{orange}{ALERT}"
+	replicate_status <- color_text("ALERT")
 
 }
 
@@ -320,11 +328,11 @@ valid_averages <- numeric_averages[!is.na(numeric_averages)]
 
 if (all(valid_averages >= 3.1 & valid_averages <= 3.6 )){
 	
-	average_status <- "\\textcolor{darkgreen}{PASS}"
+	average_status <- color_text("PASS")
 
 } else {
 	
-	average_status <- "\\textcolor{orange}{ALERT}"
+	average_status <- color_text("ALERT")
 
 }
 
@@ -335,9 +343,9 @@ overall_status = all(grepl("PASS", c(slope_status,
 	                                 average_status, 
 	                                 status6)))
 if (overall_status){
-	overall_qc_status <- "\\textcolor{darkgreen}{PASS}"
+	overall_qc_status <- color_text("PASS")
 } else {
-	overall_qc_status <- "\\textcolor{orange}{ALERT}"
+	overall_qc_status <- color_text("ALERT")
 }
 
 
