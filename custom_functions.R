@@ -1,18 +1,11 @@
 render_template3 <- function(file_path){
 
 #Experiment Information
-	data <- read.csv(file_path, sep=",", header=FALSE)
-	file_name = paste(data[1, 2], data[1, 3], sep="")
-	file_name = gsub("_", "\\\\_", file_name)
-	run_started = data[5, 2]
-	run_ended = data[6, 2]
-	machine = data[11, 2]
-
-	if (machine == "CT019934"){
-		machine = "CFX96 (1)"
-	} else if (machine == "CT020097"){
-		machine = "CFX96 (2)"
-	}
+	experiment_information <- get_experiment_information(file_path)
+	file_name <- experiment_information$file_name
+	run_started <- experiment_information$run_started
+	run_ended <- experiment_information$run_ended
+	machine <- experiment_information$machine
 
 #Quantification Results 
 
@@ -60,21 +53,33 @@ render_template3 <- function(file_path){
 
 }
 
-render_template1 <- function(file_path){
-
-#Experiment Information
+get_experiment_information <- function(file_path){
 	data <- read.csv(file_path, sep=",", header=FALSE)
 	file_name = paste(data[1, 2], data[1, 3], sep="")
 	file_name = gsub("_", "\\\\_", file_name)
 	run_started = data[5, 2]
 	run_ended = data[6, 2]
 	machine = data[11, 2]
-
 	if (machine == "CT019934"){
 		machine = "CFX96 (1)"
 	} else if (machine == "CT020097"){
 		machine = "CFX96 (2)"
 	}
+
+	list(file_name = file_name, run_started = run_started, run_ended = run_ended, machine = machine)
+}
+
+render_template1 <- function(file_path){
+
+#Experiment Information
+	
+	experiment_information <- get_experiment_information(file_path)
+	file_name <- experiment_information$file_name
+	run_started <- experiment_information$run_started
+	run_ended <- experiment_information$run_ended
+	machine <- experiment_information$machine
+
+
 
 #Quantification Information
 

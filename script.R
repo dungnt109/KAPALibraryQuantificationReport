@@ -25,6 +25,6 @@ file_path1 = "/home/dungnt/Documents/Repository/QuantificationReport/Sample resu
 file_path3 = folder_chooser()
 
 
-render_template1(file_path1)
+#render_template1(file_path1)
 
-#render("./main.Rmd", params = list(), output_file = "1.pdf") 
+render("./main.Rmd", params = list(), output_file = "1.pdf") 
