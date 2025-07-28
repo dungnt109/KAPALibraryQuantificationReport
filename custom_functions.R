@@ -35,9 +35,26 @@ render_template3 <- function(file_path){
 
 	df <- rbind(subset_other, subset_sorted)
 
-	df <- add_calculated_concentration_column(df, 1, 1)
+	standard_curve_path = "/home/dungnt/Documents/Repository/QuantificationReport/Sample results folder/2024-07-25; Lot 0000649535_20250701 - ALB MNC 0624 Std Curve, 4mM -  Standard Curve Results.csv"
 
-	df <- add_replicate_column(df)
+	standard_curve_result = read.csv(standard_curve_path, sep=",", header=TRUE)
+
+	reference_path = sub("Standard Curve Results.*", "", file_path)
+
+	reference_df = get_quantification_result_df(reference_path)
+
+	print(reference_df)
+
+	
+	M <- standard_curve_result$Slope
+
+	B <- mean(df$`Ct Value`[df$Type == "Std-3"], na.rm = TRUE) - (M * log10(df$`Given Concentration`[which(df$Type == "Std-3")[1]]))
+
+
+
+	df <- add_calculated_concentration_column(df, B, M)
+
+	df <- add_replicate_column(df, "Sample")
 
 	df <- add_average_column(df)
 
@@ -47,6 +64,10 @@ render_template3 <- function(file_path){
 
 
 	display = get_display_df(df)
+
+
+	display <- display[, -c(8, 9)]
+
 
 
 
@@ -95,16 +116,18 @@ add_calculated_concentration_column <- function(df, B, M){
 	return(df)
 }
 
-add_replicate_column <- function(df){
+add_replicate_column <- function(df, column){
+
+	column_name <- sym(column)
 
 	df <- df %>%
-	  group_by(Type) %>%
+	  group_by({{column_name}}) %>%
 	  mutate(replicate = abs(max(`Ct Value`) - min(`Ct Value`))) %>%
 	  ungroup()
 
 
 	df <- df %>%
-	  group_by(Type) %>%
+	  group_by({{column_name}}) %>%
 	  mutate(replicate = ifelse(row_number() == 1, replicate, NaN)) %>%
 	  ungroup()
 
@@ -260,7 +283,7 @@ df <- df[order(df$Type == "NTC"), ]
 
 df <- add_calculated_concentration_column(df, B, M)
 
-df <- add_replicate_column(df)
+df <- add_replicate_column(df, "Type")
 
 df <- add_average_column(df)
 
