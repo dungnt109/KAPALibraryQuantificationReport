@@ -21,10 +21,11 @@ analysis_type = analysis_question()
 
 #run_type = run_type_question()
 
-file_path1 = "/home/dungnt/Documents/Repository/QuantificationReport/Sample results folder/2024-07-25; Lot 0000649535_20250701 - ALB MNC 0624 Std Curve, 4mM - Run Information.csv"
-file_path3 = folder_chooser()
+file_path1 = "/home/dungnt/Documents/Repository/QuantificationReport/Std Curve and Samples/2024-07-25; Lot 0000649535_20250701 - KAPA - Run_01-04 - Set_3 - Sample - Run Information.csv"
+file_path3 = "/home/dungnt/Documents/Repository/QuantificationReport/Std Curve and Samples/2024-07-25; Lot 0000649535_20250701 - KAPA - Run_01-04 - Set_3 - Sample - Run Information.csv"
+ 
 
 
-#render_template1(file_path1)
+#render_template3(file_path3)
 
 render("./main.Rmd", params = list(), output_file = "1.pdf") 

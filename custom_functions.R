@@ -15,6 +15,8 @@ render_template3 <- function(file_path){
 
 	df <- get_quantification_result_df(file_path)
 
+	df <- df[df$Type %in% c("Std-3", "Std-6", "NTC", "Unkn" ), ]
+
 	df <- df[order(df$Type), ]
 
 	df <- df[order(df$Type == "NTC"), ]
@@ -39,12 +41,6 @@ render_template3 <- function(file_path){
 
 	standard_curve_result = read.csv(standard_curve_path, sep=",", header=TRUE)
 
-	reference_path = sub("Standard Curve Results.*", "", file_path)
-
-	reference_df = get_quantification_result_df(reference_path)
-
-	print(reference_df)
-
 	
 	M <- standard_curve_result$Slope
 
@@ -56,7 +52,7 @@ render_template3 <- function(file_path){
 
 	df <- add_replicate_column(df, "Sample")
 
-	df <- add_average_column(df)
+	df <- add_average_column(df, "Sample")
 
 	df <- add_delta_average_column(df)
 
@@ -66,7 +62,91 @@ render_template3 <- function(file_path){
 	display = get_display_df(df)
 
 
-	display <- display[, -c(8, 9)]
+	display <- display[, -c(9)]
+
+	average_standard_3 = mean(df$`Ct Value`[df$Type == "Std-3"], na.rm = TRUE)
+
+	average_standard_6 = mean(df$`Ct Value`[df$Type == "Std-6"], na.rm = TRUE)
+
+	file_path_reference = sub(" Standard Curve Results.*", "", standard_curve_path ) 
+	file_path_reference = paste(file_path_reference, "Run Information.csv", sep="")
+
+	df_ref = get_quantification_result_df(file_path_reference)
+
+	average_standard_3_ref = mean(df_ref$`Ct Value`[df_ref$Type == "Std-3"], na.rm = TRUE)
+
+	average_standard_6_ref = mean(df_ref$`Ct Value`[df_ref$Type == "Std-6"], na.rm = TRUE)
+
+	print(average_standard_6)
+
+	print(average_standard_6_ref) 
+
+	if (abs(average_standard_3 - average_standard_3_ref) <= 1.5){
+		status1 <- color_text("PASS")
+	} else {
+		status1 <- color_text("ALERT")
+	}
+
+	if(abs(average_standard_6 - average_standard_6_ref) <= 1.5){
+ 		status2 <- color_text("PASS")
+	} else {
+		status2 <- color_text("ALERT")
+	}
+
+	ntc = df$`Ct Value`[df$Type=="NTC"]
+	std6 = df$`Ct Value`[df$Type=="Std-6"]
+
+
+	ntc_has_numeric = any(!is.na(suppressWarnings(as.numeric(unlist(ntc)))))
+
+	std6_has_numeric = any(!is.na(suppressWarnings(as.numeric(unlist(std6)))))
+
+	if (!ntc_has_numeric) {
+        	status3 <- color_text("PASS")
+	} else {
+
+        	if (!std6_has_numeric){
+                	status3 <- color_text("ALERT")
+        	} else {
+                	ntc_min = min(suppressWarnings(as.numeric(ntc)), na.rm =TRUE)
+                	std6_max = max(suppressWarnings(as.numeric(std6)), na.rm =TRUE)
+
+                	if (ntc_min - std6_max >= 3){
+                                status3 <- color_text("PASS")
+                        } else {
+                                status3 <- color_text("ALERT")
+                        }
+       		 }
+
+
+	}
+
+	numeric_replicates <- suppressWarnings(as.numeric(df$replicate))
+
+	valid_replicates <- numeric_replicates[!is.na(numeric_replicates)]
+
+	if (all(valid_replicates >= -1.5 & valid_replicates <= 1.5)){
+
+        	replicate_status <- color_text("PASS")
+
+	} else {
+
+        	replicate_status <- color_text("ALERT")
+
+	}
+
+
+	overall_status = all(grepl("PASS", c(status1, status2, status3, replicate_status)))
+
+	if (overall_status){
+        	overall_qc_status <- color_text("PASS")
+	} else {
+        	overall_qc_status <- color_text("ALERT")
+	}
+
+
+
+
 
 
 
@@ -135,15 +215,17 @@ add_replicate_column <- function(df, column){
 
 }
 
-add_average_column <- function(df){
+add_average_column <- function(df, column){
+
+	column_name <- sym(column)
 
 	df <- df %>%
-	  group_by(Type) %>%
+	  group_by({{column_name}}) %>%
 	  mutate(average = mean(`Ct Value`)) %>%
 	  ungroup()
 
 	df <- df %>%
-	  group_by(Type) %>%
+	  group_by({{column_name}}) %>%
 	  mutate(average = ifelse(row_number() == 1, average, NaN)) %>%
 	  ungroup()
 
@@ -274,6 +356,10 @@ figure_path <- paste(path, "Amplification.png", sep="")
 
 df <- get_quantification_result_df(file_path)
 
+
+df <- df[df$Type != "Unkn", ]
+
+
 B <- standard_curve_result$Y.Intercept 
 M <- standard_curve_result$Slope
 
@@ -285,7 +371,7 @@ df <- add_calculated_concentration_column(df, B, M)
 
 df <- add_replicate_column(df, "Type")
 
-df <- add_average_column(df)
+df <- add_average_column(df, "Type")
 
 df <- add_delta_average_column(df)
 
