@@ -19,7 +19,7 @@ Machine used: & `r machine` \\
 \hline
 Parameter & Results & QC Status \\
 \hline
-Threshold &       &     -    \\
+Threshold &   `r threshold`    &     -    \\
 Slope     &  `r slope`       &   `r slope_status`        \\
 Reaction efficiency &  `r reaction_efficiency`  &  `r reaction_efficiency_status`      \\
 $R^2$ Value   &   `r r_2_value`      &      `r r_2_status`     \\
@@ -34,7 +34,7 @@ $R^2$ Value   &   `r r_2_value`      &      `r r_2_status`     \\
     \label{fig:yourlabel}
 \end{figure}
 
-```{r fig1, fig.align="center", echo = FALSE}
+```{r , fig.align="center", echo = FALSE}
 
  
 kbl(display,
@@ -68,3 +68,5 @@ kbl(display,
 \multicolumn{2}{|l}{Overall QC Status}   &  `r overall_qc_status` \\
 \hline
 \end{tabularx}
+
+\newpage  

@@ -3,12 +3,14 @@
 
 ```{r summary, summary.align="center", echo = FALSE}
 
+total_num_samples <- sum(summary$TotalSamples, na.rm = TRUE)
+
 colnames(summary) <- c("\\makecell[l]{No.}", 
                        "\\makecell[l]{Run Date}", 
                        "\\makecell[l]{Run Type}", 
                        "\\makecell[l]{Threshold}", 
-                       "\\makecell[l]{Lot No. of KAPA\\\\Quantification Kit}", 
-                       "\\makecell[l]{Opening Date of KAPA\\\\Quantification Kit}", 
+                       "\\makecell[l]{Lot No.\\\\of Kit}", 
+                       "\\makecell[l]{Opening Date\\\\of Kit}", 
                        "\\makecell[l]{No. of\\\\Samples}", 
                        "\\makecell[l]{Overall\\\\QC Status}")
  
@@ -22,17 +24,17 @@ kbl(summary,
 
 ```
 
-\textbf{Total Number of Samples:}
+\textbf{Total Number of Samples:} `r total_num_samples`
 
-\textbf{Run Number:}
+\textbf{Run Number:} `r run_no`
 
 \textbf{Remarks (if any):}
 
 \vspace{2cm}
 \renewcommand{\arraystretch}{2}
 \begin{tabularx}{\textwidth}{p{3cm}p{6cm}p{3cm}p{6cm}}
-Performed By: &  \underline{\hspace{5cm}}   & Verified By: & \underline{\hspace{5cm}}  \\
-Signature:     & \underline{\hspace{5cm}}   & Signature:   & \underline{\hspace{5cm}}  \\
-Date          &  \underline{\hspace{5cm}}   & Date:        & \underline{\hspace{5cm}}  \\
+Performed By: &  `r performed_by`    & Verified By: & \underline{\hspace{5cm}}  \\
+Signature:     &     & Signature:   & \underline{\hspace{5cm}}  \\
+Date:          &  `r run_date`    & Date:        & \underline{\hspace{5cm}}  \\
 \end{tabularx}
 

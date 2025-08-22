@@ -94,3 +94,36 @@ folder_chooser <- function(){
 	return(folder)
 
 }
+
+reference_question <- function(){
+	cat("\nWhich standard curve as reference?\n")
+	answer <- as.numeric(trimws(readLines("stdin",n=1)))
+	return (answer) 
+	
+}
+
+threshold_question <- function(){
+
+	cat("Please key in the baseline threshold?\n")
+
+	threshold <- trimws(readLines("stdin",n=1))
+	threshold <- as.numeric(threshold)
+
+	return(threshold) 
+}
+
+more_run_question <- function(){
+
+	options <- c("No", "Yes")
+
+        final_result = paste(paste("\t", seq_along(options), ". ", options, sep = ""), collapse = "\n")
+
+        cat("\nDo you have another run file to analyze?:\n")
+        cat(final_result)
+        cat("\n")
+
+        answer <- as.numeric(trimws(readLines("stdin",n=1)))
+
+        return(options[answer])
+
+}

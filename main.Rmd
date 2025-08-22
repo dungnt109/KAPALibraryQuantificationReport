@@ -59,14 +59,37 @@ text <- "hello"
 #  		cat(knitr::knit_child(template, quiet = TRUE))
 #	}
 #}
-result1 = render_template1(file_path1)
-result3 = render_template3(file_path3)
 
-cat(result1$latex)
-cat(result3$latex)
+for (i in 1:nrow(runs)) {
 
-summary <- result1$summary 
+	run_type <- runs[i, "Run"] 
 
+	run <- runs[i,] 
+
+	if (run_type == "Standard Curve (standards only)") {
+            result = render_template1(run, summary)
+	    summary <- result$summary 
+	} else if (run_type == "Standard Curve (with samples)") {
+
+	} else {
+            result = render_template3(run, summary)
+	    summary <- result$summary
+	} 
+
+	cat(result$latex) 
+
+
+
+}
+
+#result1 = render_template1(file_path1, summary)
+#summary <- result1$summary
+#result3 = render_template3(file_path3, summary)
+
+#cat(result1$latex)
+#cat(result3$latex)
+
+#summary <- result3$summary 
 
 cat(knitr::knit_child("summary.Rmd", quiet = TRUE))
 
