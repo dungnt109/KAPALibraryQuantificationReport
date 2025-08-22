@@ -1,4 +1,3 @@
-
 render_template1 <- function(run, summary){
 
 	file_path <- run$Folder
@@ -6,6 +5,8 @@ render_template1 <- function(run, summary){
         threshold <- run$Threshold
 
 	run_type <- run$Run
+
+	index <- run$Index
  
 
 
@@ -167,7 +168,7 @@ render_template1 <- function(run, summary){
 
 	summary <- rbind(summary, list(Index <- nrow(summary)+1, 
 				       Date  <- run_date, 
-				       Type  <- "Standard Curve (Set 1)", 
+				       Type  <- paste0("Standard Curve (Set ", index ,")"), 
 				       Threshold <- threshold, 
 				       Lot <- lot_no, 
 				       Opening <- opening_date, 
@@ -188,6 +189,8 @@ render_template3 <- function(run, summary){
         threshold <- run$Threshold
 
         run_type <- run$Run
+
+	reference <- run$Reference
 
 #Experiment Information
 	experiment_information <- get_experiment_information(file_path)
@@ -226,7 +229,11 @@ render_template3 <- function(run, summary){
 
 	df <- rbind(subset_other, subset_sorted)
 
-	standard_curve_path = "/home/dungnt/Documents/Repository/QuantificationReport/Sample results folder/2024-07-25; Lot 0000649535_20250701 - ALB MNC 0624 Std Curve, 4mM -  Standard Curve Results.csv"
+	reference_file_path <- runs[runs$Index == reference, "Folder"][1]
+
+	print(reference_file_path)
+
+        standard_curve_path = paste( sub("Run Information.*", "", reference_file_path) , " Standard Curve Results.csv", sep="")
 
 	standard_curve_result = read.csv(standard_curve_path, sep=",", header=TRUE)
 

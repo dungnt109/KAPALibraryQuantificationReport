@@ -2,7 +2,7 @@
 
 
 ```
-\textbf{\underline{Standard Curve (Set 1)}}
+\textbf{\underline{Standard Curve (Set `r index`)}}
 
 \textbf{Experiment Information}
 
