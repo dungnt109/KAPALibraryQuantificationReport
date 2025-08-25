@@ -10,7 +10,7 @@ render_template1 <- function(run, summary){
  
 
 
-#Experiment Information
+	#Experiment Information
 	
 	experiment_information <- get_experiment_information(file_path)
 	file_name <- experiment_information$file_name
@@ -192,14 +192,14 @@ render_template3 <- function(run, summary){
 
 	reference <- run$Reference
 
-#Experiment Information
+	#Experiment Information
 	experiment_information <- get_experiment_information(file_path)
 	file_name <- experiment_information$file_name
 	run_started <- experiment_information$run_started
 	run_ended <- experiment_information$run_ended
 	machine <- experiment_information$machine
 
-#Quantification Results 
+	#Quantification Results 
 
 	path = sub("Run Information.*", "", file_path)
 
@@ -231,7 +231,6 @@ render_template3 <- function(run, summary){
 
 	reference_file_path <- runs[runs$Index == reference, "Folder"][1]
 
-	print(reference_file_path)
 
         standard_curve_path = paste( sub("Run Information.*", "", reference_file_path) , " Standard Curve Results.csv", sep="")
 
@@ -351,10 +350,10 @@ render_template3 <- function(run, summary){
 
 	summary <- rbind(summary, list(Index <- nrow(summary)+1, 
 				       Date <- run_date, 
-				       Type <- "", 
+				       Type <- "Import", 
 				       Threshold <- threshold, 
-				       Lot <- "", 
-				       Opening <- "", 
+				       Lot <- lot_no, 
+				       Opening <- opening_date, 
 				       TotalSamples <- "", 
 				       Status <- overall_qc_status))
 

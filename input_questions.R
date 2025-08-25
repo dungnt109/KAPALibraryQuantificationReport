@@ -95,8 +95,17 @@ folder_chooser <- function(){
 
 }
 
-reference_question <- function(){
+reference_question <- function(runs){
 	cat("\nWhich standard curve as reference?\n")
+
+	for (i in 1:nrow(runs)) {
+		
+		index <- runs[i, "Index"]
+		if (!is.na(index)) {
+			cat(paste("\t", index, ". Standard Curve Set ", index, "\n", sep=""))
+		}
+	}
+
 	answer <- as.numeric(trimws(readLines("stdin",n=1)))
 	return (answer) 
 	

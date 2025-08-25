@@ -32,7 +32,7 @@ while (TRUE) {
 
 		index = index + 1
 
-		runs <- rbind(runs, data.frame(Run = run_type, Threshold = threshold, Folder = file_path, Reference = "NA", Index = index))
+		runs <- rbind(runs, data.frame(Run = run_type, Threshold = threshold, Folder = file_path, Reference = NA, Index = index))
 
 	} else if (run_type == "Standard Curve (with samples)"){
 
@@ -41,15 +41,15 @@ while (TRUE) {
 
 		index = index + 1
 
-		runs <- rbind(runs, data.frame(Run = run_type, Threshold = threshold, Folder = file_path, Reference = "NA", Index = index))
+		runs <- rbind(runs, data.frame(Run = run_type, Threshold = threshold, Folder = file_path, Reference = NA, Index = index))
 	} else {
 		file_path = "/home/dungnt/Documents/Repository/QuantificationReport/Std Curve and Samples/2024-07-25; Lot 0000649535_20250701 - KAPA - Run_01-04 - Set_3 - Sample - Run Information.csv"
 
 		threshold <- threshold_question()
 
-		reference  = reference_question() 
+		reference  = reference_question(runs) 
 
-		runs <- rbind(runs, data.frame(Run = run_type, Threshold = threshold, Folder = file_path, Reference = reference, Index = "NA"))
+		runs <- rbind(runs, data.frame(Run = run_type, Threshold = threshold, Folder = file_path, Reference = reference, Index = NA))
 
 
 	}
