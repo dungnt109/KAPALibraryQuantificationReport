@@ -192,6 +192,8 @@ render_template3 <- function(run, summary){
 
 	reference <- run$Reference
 
+	import_index <- run$ImportIndex
+
 	#Experiment Information
 	experiment_information <- get_experiment_information(file_path)
 	file_name <- experiment_information$file_name
@@ -216,6 +218,8 @@ render_template3 <- function(run, summary){
 	df <- df[order(df$Type == "Unkn"), ]
 
 	subset <- df[df$Type == "Unkn", ]
+
+	number_of_samples <- length(unique(subset$Sample))
 
 	subset$Sample_order <- match(subset$Sample, unique(subset$Sample))
 
@@ -350,11 +354,11 @@ render_template3 <- function(run, summary){
 
 	summary <- rbind(summary, list(Index <- nrow(summary)+1, 
 				       Date <- run_date, 
-				       Type <- "Import", 
+				       Type <- paste0("Samples (Set ", import_index , ")"),  
 				       Threshold <- threshold, 
 				       Lot <- lot_no, 
 				       Opening <- opening_date, 
-				       TotalSamples <- "", 
+				       TotalSamples <- number_of_samples, 
 				       Status <- overall_qc_status))
 
 

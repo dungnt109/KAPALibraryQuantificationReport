@@ -3,7 +3,10 @@
 
 ```{r summary, summary.align="center", echo = FALSE}
 
-total_num_samples <- sum(summary$TotalSamples, na.rm = TRUE)
+colnames(summary) <- c("No", "Date", "Type", "Threshold", "Lot", "Opening", "TotalSamples", "Status")
+
+total_num_samples <-  sum(suppressWarnings(as.numeric(summary$TotalSamples)), na.rm = TRUE)
+
 
 colnames(summary) <- c("\\makecell[l]{No.}", 
                        "\\makecell[l]{Run Date}", 

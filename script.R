@@ -14,9 +14,10 @@ run_date = run_date_question()
 run_no = run_no_question()
 
 summary <- data.frame(matrix(nrow = 0, ncol = 8))
-runs <- data.frame(matrix(nrow = 0, ncol = 5)) 
+runs <- data.frame(matrix(nrow = 0, ncol = 6)) 
 index <- 0 
 
+import_run_index <- 0 
 
 analysis_type <- analysis_question()
 
@@ -26,30 +27,33 @@ while (TRUE) {
 
 
 	if (run_type == "Standard Curve (standards only)"){
-
-		file_path = "/home/dungnt/Documents/Repository/QuantificationReport/Std Curve and Samples/2024-07-25; Lot 0000649535_20250701 - KAPA - Run_01-04 - Set_3 - Sample - Run Information.csv"
+		file_path  <- file.choose(new = FALSE)
+		#file_path = "/home/dungnt/Documents/Repository/QuantificationReport/Std Curve and Samples/2024-07-25; Lot 0000649535_20250701 - KAPA - Run_01-04 - Set_3 - Sample - Run Information.csv"
 		threshold <- threshold_question()
 
 		index = index + 1
 
-		runs <- rbind(runs, data.frame(Run = run_type, Threshold = threshold, Folder = file_path, Reference = NA, Index = index))
+		runs <- rbind(runs, data.frame(Run = run_type, Threshold = threshold, Folder = file_path, Reference = NA, Index = index, ImportIndex = NA ))
 
 	} else if (run_type == "Standard Curve (with samples)"){
 
-		file_path = "/home/dungnt/Documents/Repository/QuantificationReport/Std Curve and Samples/2024-07-25; Lot 0000649535_20250701 - KAPA - Run_01-04 - Set_3 - Sample - Run Information.csv"
-		threshold <- threshold_question()
+		#file_path = "/home/dungnt/Documents/Repository/QuantificationReport/Std Curve and Samples/2024-07-25; Lot 0000649535_20250701 - KAPA - Run_01-04 - Set_3 - Sample - Run Information.csv"
+		#threshold <- threshold_question()
 
-		index = index + 1
+		#index = index + 1
 
-		runs <- rbind(runs, data.frame(Run = run_type, Threshold = threshold, Folder = file_path, Reference = NA, Index = index))
+		#runs <- rbind(runs, data.frame(Run = run_type, Threshold = threshold, Folder = file_path, Reference = NA, Index = index, ImportIndex = NA))
 	} else {
-		file_path = "/home/dungnt/Documents/Repository/QuantificationReport/Std Curve and Samples/2024-07-25; Lot 0000649535_20250701 - KAPA - Run_01-04 - Set_3 - Sample - Run Information.csv"
+		file_path <- file.choose(new = FALSE)
+		#file_path = "/home/dungnt/Documents/Repository/QuantificationReport/Std Curve and Samples/2024-07-25; Lot 0000649535_20250701 - KAPA - Run_01-04 - Set_3 - Sample - Run Information.csv"
 
 		threshold <- threshold_question()
 
 		reference  = reference_question(runs) 
 
-		runs <- rbind(runs, data.frame(Run = run_type, Threshold = threshold, Folder = file_path, Reference = reference, Index = NA))
+		import_run_index = import_run_index + 1
+
+		runs <- rbind(runs, data.frame(Run = run_type, Threshold = threshold, Folder = file_path, Reference = reference, Index = NA, ImportIndex = import_run_index))
 
 
 	}
