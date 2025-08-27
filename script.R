@@ -1,11 +1,6 @@
 source("input_questions.R")
 source("custom_functions.R")
 
-library(rmarkdown)
-library(knitr)
-library(flextable) 
-library(dplyr)
-library(kableExtra) 
 
 performed_by = run_by_question()
 
@@ -90,5 +85,11 @@ for (i in 1:nrow(runs)) {
 #result3 <- render_template3(file_path3, summary)
 
 #print(result3$summary) 
+
+library(rmarkdown)
+library(knitr)
+library(flextable)
+library(dplyr)
+library(kableExtra)
 
 render("./main.Rmd", params = list(), output_file = "1.pdf") 

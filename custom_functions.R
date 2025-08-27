@@ -54,6 +54,7 @@ render_KAPA_template1 <- function(run, summary){
 	## figure 
 
 	figure_path <- paste(path, "Amplification.png", sep="") 
+	figure_path <- gsub("\\\\", "/", figure_path)
 
 	## Table 
 
@@ -206,6 +207,8 @@ render_template3 <- function(run, summary){
 	path = sub("Run Information.*", "", file_path)
 
 	figure_path <- paste(path, "Amplification.png", sep="") 
+
+	figure_path <- gsub("\\\\", "/", figure_path)
 
 	df <- get_quantification_result_df(file_path)
 
