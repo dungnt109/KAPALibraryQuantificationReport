@@ -176,7 +176,7 @@ render_template1 <- function(run, summary){
 				       Status <- overall_qc_status))
 
 
-	return(list(latex=knitr::knit_child("template1.Rmd", quiet = TRUE, envir = environment()), summary = summary))
+	return(list(latex=knitr::knit_child("KAPA_template1.Rmd", quiet = TRUE, envir = environment()), summary = summary))
 
 
 }
