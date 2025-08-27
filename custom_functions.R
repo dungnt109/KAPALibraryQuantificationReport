@@ -1,4 +1,4 @@
-render_template1 <- function(run, summary){
+render_KAPA_template1 <- function(run, summary){
 
 	file_path <- run$Folder
 

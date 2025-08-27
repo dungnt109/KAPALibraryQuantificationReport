@@ -67,7 +67,7 @@ for (i in 1:nrow(runs)) {
 	run <- runs[i,] 
 
 	if (run_type == "Standard Curve (standards only)") {
-            result = render_template1(run, summary)
+            result = render_KAPA_template1(run, summary)
 	    summary <- result$summary 
 	} else if (run_type == "Standard Curve (with samples)") {
 
