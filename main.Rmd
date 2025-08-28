@@ -72,7 +72,7 @@ for (i in 1:nrow(runs)) {
 	} else if (run_type == "Standard Curve (with samples)") {
 
 	} else {
-            result = render_template3(run, summary)
+            result = render_KAPA_template3(run, summary)
 	    summary <- result$summary
 	} 
 

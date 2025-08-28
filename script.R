@@ -78,14 +78,6 @@ for (i in 1:nrow(runs)) {
 }
 
 
-#result1 <- render_template1(file_path1, summary)
-
-#summary <- result1$summary
-
-#result3 <- render_template3(file_path3, summary)
-
-#print(result3$summary) 
-
 library(rmarkdown)
 library(knitr)
 library(flextable)

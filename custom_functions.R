@@ -183,7 +183,7 @@ render_KAPA_template1 <- function(run, summary){
 }
 
 
-render_template3 <- function(run, summary){
+render_KAPA_template3 <- function(run, summary){
 
 	file_path <- run$Folder
 
@@ -366,7 +366,7 @@ render_template3 <- function(run, summary){
 
 
 
-	return(list(latex=knitr::knit_child("template3.Rmd", quiet = TRUE, envir = environment()), summary = summary))
+	return(list(latex=knitr::knit_child("KAPA_template3.Rmd", quiet = TRUE, envir = environment()), summary = summary))
 
 }
 
