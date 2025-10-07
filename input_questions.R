@@ -70,12 +70,12 @@ analysis_question <- function() {
 }
 
 
-run_type_question <- function() {
-	options <- c("Standard Curve (standards only)", "Standard Curve (with samples)", "Import")
+input_type_question <- function() {
+	options <- c("Standards", "Samples")
 
 	final_result = paste(paste("\t", seq_along(options), ". ", options, sep = ""), collapse = "\n")
 
-	cat("\nRun type:\n")
+	cat("\nInput type:\n")
         cat(final_result)
         cat("\n")
 

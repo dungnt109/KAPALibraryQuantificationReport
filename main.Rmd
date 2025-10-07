@@ -62,16 +62,16 @@ text <- "hello"
 
 for (i in 1:nrow(runs)) {
 
-	run_type <- runs[i, "Run"] 
+	input_type <- runs[i, "InputType"] 
 
 	run <- runs[i,] 
 
-	if (run_type == "Standard Curve (standards only)") {
+	if (input_type == "Standards") {
             result = render_KAPA_template1(run, summary)
 	    summary <- result$summary 
-	} else if (run_type == "Standard Curve (with samples)") {
+	} else if (input_type == "Standard Curve (with samples)") {
 
-	} else {
+	} else if (input_type == "Samples"){
             result = render_KAPA_template3(run, summary)
 	    summary <- result$summary
 	} 

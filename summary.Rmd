@@ -10,7 +10,7 @@ total_num_samples <-  sum(suppressWarnings(as.numeric(summary$TotalSamples)), na
 
 colnames(summary) <- c("\\makecell[l]{No.}", 
                        "\\makecell[l]{Run Date}", 
-                       "\\makecell[l]{Run Type}", 
+                       "\\makecell[l]{Input Type}", 
                        "\\makecell[l]{Threshold}", 
                        "\\makecell[l]{Lot No.\\\\of Kit}", 
                        "\\makecell[l]{Opening Date\\\\of Kit}", 

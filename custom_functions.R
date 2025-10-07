@@ -4,7 +4,7 @@ render_KAPA_template1 <- function(run, summary){
 
         threshold <- run$Threshold
 
-	run_type <- run$Run
+	input_type <- run$InputType
 
 	index <- run$Index
  
@@ -189,7 +189,7 @@ render_KAPA_template3 <- function(run, summary){
 
         threshold <- run$Threshold
 
-        run_type <- run$Run
+        input_type <- run$InputType
 
 	reference <- run$Reference
 
@@ -491,6 +491,8 @@ get_display_df <- function(df){
 	display$delta_average = ifelse(is.na(as.numeric(df$delta_average)),  "", sprintf("%#.2f", df$delta_average) )
 
 	display$`Given Concentration` = ifelse(is.na(as.numeric(df$`Given Concentration`)),  "", format(df$`Given Concentration`, scientific = FALSE))
+
+	display$Sample <- gsub("_", "\\\\_", display$Sample)
 
 
 

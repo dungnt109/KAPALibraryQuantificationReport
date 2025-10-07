@@ -18,26 +18,26 @@ analysis_type <- analysis_question()
 
 while (TRUE) {
 
-	run_type <- run_type_question()
+	input_type <- input_type_question()
 
 
-	if (run_type == "Standard Curve (standards only)"){
+	if (input_type == "Standards"){
 		file_path  <- file.choose(new = FALSE)
 		#file_path = "/home/dungnt/Documents/Repository/QuantificationReport/Std Curve and Samples/2024-07-25; Lot 0000649535_20250701 - KAPA - Run_01-04 - Set_3 - Sample - Run Information.csv"
 		threshold <- threshold_question()
 
 		index = index + 1
 
-		runs <- rbind(runs, data.frame(Run = run_type, Threshold = threshold, Folder = file_path, Reference = NA, Index = index, ImportIndex = NA ))
+		runs <- rbind(runs, data.frame(InputType = input_type, Threshold = threshold, Folder = file_path, Reference = NA, Index = index, ImportIndex = NA ))
 
-	} else if (run_type == "Standard Curve (with samples)"){
+	} else if (input_type == "Standard Curve (with samples)"){
 
 		#file_path = "/home/dungnt/Documents/Repository/QuantificationReport/Std Curve and Samples/2024-07-25; Lot 0000649535_20250701 - KAPA - Run_01-04 - Set_3 - Sample - Run Information.csv"
 		#threshold <- threshold_question()
 
 		#index = index + 1
 
-		#runs <- rbind(runs, data.frame(Run = run_type, Threshold = threshold, Folder = file_path, Reference = NA, Index = index, ImportIndex = NA))
+		#runs <- rbind(runs, data.frame(InputType = input_type, Threshold = threshold, Folder = file_path, Reference = NA, Index = index, ImportIndex = NA))
 	} else {
 		file_path <- file.choose(new = FALSE)
 		#file_path = "/home/dungnt/Documents/Repository/QuantificationReport/Std Curve and Samples/2024-07-25; Lot 0000649535_20250701 - KAPA - Run_01-04 - Set_3 - Sample - Run Information.csv"
@@ -48,7 +48,7 @@ while (TRUE) {
 
 		import_run_index = import_run_index + 1
 
-		runs <- rbind(runs, data.frame(Run = run_type, Threshold = threshold, Folder = file_path, Reference = reference, Index = NA, ImportIndex = import_run_index))
+		runs <- rbind(runs, data.frame(InputType = input_type, Threshold = threshold, Folder = file_path, Reference = reference, Index = NA, ImportIndex = import_run_index))
 
 
 	}
@@ -65,7 +65,7 @@ while (TRUE) {
 
 for (i in 1:nrow(runs)) {
 
-        run_type <- runs[i, "Run"]
+        input_type <- runs[i, "InputType"]
 
         run <- runs[i,]
 
