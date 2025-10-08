@@ -13,7 +13,7 @@ render_KAPA_template1 <- function(run, summary){
 	#Experiment Information
 	
 	experiment_information <- get_experiment_information(file_path)
-	file_name <- experiment_information$file_name
+	file_name <- tools::file_path_sans_ext(experiment_information$file_name)
 	run_started <- experiment_information$run_started
 	run_ended <- experiment_information$run_ended
 	machine <- experiment_information$machine
@@ -203,7 +203,7 @@ render_KAPA_template3 <- function(run, summary){
 
 	#Experiment Information
 	experiment_information <- get_experiment_information(file_path)
-	file_name <- experiment_information$file_name
+	file_name <- tools::file_path_sans_ext(experiment_information$file_name)
 	run_started <- experiment_information$run_started
 	run_ended <- experiment_information$run_ended
 	machine <- experiment_information$machine

@@ -1,5 +1,5 @@
 \newpage 
-\textbf{\underline{KAPA Library Quantification Summary Report}}
+\section*{\textbf{\underline{KAPA Library Quantification Summary Report}}}
 
 ```{r summary, summary.align="center", echo = FALSE}
 

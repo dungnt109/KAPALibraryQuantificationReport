@@ -1,8 +1,8 @@
 \newpage
 
-\textbf{\underline{Samples (Set `r import_index`)}}
+\section*{\textbf{\underline{Samples (Set `r import_index`)}}}
 
-\textbf{Experiment Information}
+\subsection*{\textbf{Experiment Information}}
 
 \begin{tabular}{l l}
 File name: &  `r file_name` \\
@@ -11,10 +11,10 @@ Run ended & `r run_ended` \\
 Machine used: & `r machine` \\
 \end{tabular}
 
-File name of reference Standard Curve: `r basename(file_path_reference)`
+File name of reference Standard Curve: `r sub(" - Run Information.*", "", basename(file_path_reference))`
 
 
-\textbf{Quantification Results} 
+\subsection*{\textbf{Quantification Results} }
 
 \begin{figure}[h]
     \centering
@@ -30,11 +30,12 @@ kbl(display,
     booktabs = TRUE,
     escape = FALSE,
     row.names = FALSE, 
-    align = "l") 
+    align = "l", 
+    linesep = "") 
 
 ```
 
-\textbf{Quality Control (QC) Checklist}
+\subsection*{\textbf{Quality Control (QC) Checklist}}
 
 
 \begin{tabularx}{\textwidth} {|c | X | c|}

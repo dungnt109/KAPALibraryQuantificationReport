@@ -2,9 +2,9 @@
 
 
 ```
-\textbf{\underline{Standard Curve (Set `r index`)}}
+\section*{\textbf{\underline{Standard Curve (Set `r index`)}}}
 
-\textbf{Experiment Information}
+\subsection*{\textbf{Experiment Information}}
 
 \begin{tabular}{l l}
 File name: &  `r file_name` \\
@@ -13,7 +13,7 @@ Run ended & `r run_ended` \\
 Machine used: & `r machine` \\
 \end{tabular}
 
-\textbf{Quantification Information}
+\subsection*{\textbf{Quantification Information}}
 
 \begin{tabular}{|c | c | c |}
 \hline
@@ -26,7 +26,7 @@ $R^2$ Value   &   `r r_2_value`      &      `r r_2_status`     \\
 \hline
 \end{tabular} 
 
-\textbf{Quantification Results} 
+\subsection*{\textbf{Quantification Results} }
 
 \begin{figure}[h]
     \centering
@@ -51,7 +51,7 @@ kbl(display,
 
 
 
-\textbf{Quality Control (QC) Checklist}
+\subsection*{\textbf{Quality Control (QC) Checklist}}
 
 
 \begin{tabularx}{\textwidth} {|c | X | c|}
