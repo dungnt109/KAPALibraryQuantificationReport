@@ -77,10 +77,12 @@ render_KAPA_template1 <- function(run, summary){
 
 	df <- add_average_column(df, "Type")
 
-	df <- add_delta_average_column(df)
-
 	df$replicate[df$Type == "NTC"] <- NA
 	df$average[df$Type == "NTC"] <- NA
+
+
+	df <- add_delta_average_column(df)
+
 
 
 	df <- df[, c(1, 2, 3, 4, 6, 5, 7, 8, 9)]

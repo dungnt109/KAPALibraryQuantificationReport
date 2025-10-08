@@ -11,7 +11,7 @@ Run ended & `r run_ended` \\
 Machine used: & `r machine` \\
 \end{tabular}
 
-File name of reference Standard Curve: 
+File name of reference Standard Curve: `r basename(file_path_reference)`
 
 
 \textbf{Quantification Results} 
