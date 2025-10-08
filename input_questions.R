@@ -71,7 +71,7 @@ analysis_question <- function() {
 
 
 input_type_question <- function() {
-	options <- c("Standards", "Samples")
+	options <- c("Standards", "Import")
 
 	final_result = paste(paste("\t", seq_along(options), ". ", options, sep = ""), collapse = "\n")
 

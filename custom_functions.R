@@ -363,7 +363,7 @@ render_KAPA_template3 <- function(run, summary){
 
 	summary <- rbind(summary, list(Index <- nrow(summary)+1, 
 				       Date <- run_date, 
-				       Type <- paste0("Samples (Set ", import_index , ")"),  
+				       Type <- paste0("Import (Set ", import_index , ")"),  
 				       Threshold <- threshold, 
 				       Lot <- lot_no, 
 				       Opening <- opening_date, 
@@ -507,10 +507,10 @@ get_display_df <- function(df){
 		          "\\makecell[l]{Type}", 
 		          "\\makecell[l]{Given\\\\Concentration\\\\(copies)}", 
 		          "\\makecell[l]{Calculated\\\\Concentration\\\\(copies)}", 
-		          "\\makecell[l]{Ct\\\\Value}", 
-		          "\\makecell[l]{$\\Delta Ct$ of\\\\Replicates}", 
+		          "\\makecell[l]{Ct Value}", 
+		          "\\makecell[l]{$\\Delta Ct$ of Replicates}", 
 		          "average",
-		          "\\makecell[l]{$\\Delta Ct$ of\\\\Average Ct}")
+		          "\\makecell[l]{$\\Delta Ct$ of Average Ct}")
 
 	return (display)
 
