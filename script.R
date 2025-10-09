@@ -1,6 +1,11 @@
 source("input_questions.R")
 source("custom_functions.R")
 
+generated_date <- format(Sys.time(), format="%Y-%m-%d %H:%M:%S")
+
+version_number <- "v1.0"
+
+pipeline_version <- "Version 1.0, 09 Oct 2025"
 
 performed_by = run_by_question()
 
@@ -21,7 +26,7 @@ while (TRUE) {
 	input_type <- input_type_question()
 
 
-	if (input_type == "Standards"){
+	if (input_type == "Standard Curve"){
 		file_path  <- file.choose(new = FALSE)
 		#file_path = "/home/dungnt/Documents/Repository/QuantificationReport/Std Curve and Samples/2024-07-25; Lot 0000649535_20250701 - KAPA - Run_01-04 - Set_3 - Sample - Run Information.csv"
 		threshold <- threshold_question()
@@ -38,7 +43,7 @@ while (TRUE) {
 		#index = index + 1
 
 		#runs <- rbind(runs, data.frame(InputType = input_type, Threshold = threshold, Folder = file_path, Reference = NA, Index = index, ImportIndex = NA))
-	} else {
+	} else if (input_type == "Import") {
 		file_path <- file.choose(new = FALSE)
 		#file_path = "/home/dungnt/Documents/Repository/QuantificationReport/Std Curve and Samples/2024-07-25; Lot 0000649535_20250701 - KAPA - Run_01-04 - Set_3 - Sample - Run Information.csv"
 
@@ -84,4 +89,4 @@ library(flextable)
 library(dplyr)
 library(kableExtra)
 
-render("./main.Rmd", params = list(), output_file = "1.pdf") 
+render("./main.Rmd", params = list(), output_file = paste( analysis_type, "_Report_", generated_date, "_V1.0.pdf", sep="")) 

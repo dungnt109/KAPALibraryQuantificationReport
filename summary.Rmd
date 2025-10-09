@@ -27,11 +27,11 @@ kbl(summary,
 
 ```
 
-\textbf{Total Number of Samples:} `r total_num_samples`
+Total Number of Samples: `r total_num_samples`
 
-\textbf{Run Number:} `r run_no`
+Run Number: `r run_no`
 
-\textbf{Remarks (if any):}
+Remarks (if any):
 
 \vspace{2cm}
 \renewcommand{\arraystretch}{2}

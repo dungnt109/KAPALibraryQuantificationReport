@@ -1,6 +1,6 @@
 \newpage
 
-\section*{\textbf{\underline{Samples (Set `r import_index`)}}}
+\section*{\textbf{\underline{Import (Set `r import_index`)}}}
 
 \subsection*{\textbf{Experiment Information}}
 

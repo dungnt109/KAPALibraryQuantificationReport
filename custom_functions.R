@@ -509,7 +509,7 @@ get_display_df <- function(df){
 		          "\\makecell[l]{Calculated Concentration\\\\(copies)}", 
 		          "\\makecell[l]{Ct Value}", 
 		          "\\makecell[l]{$\\Delta Ct$ of\\\\Replicates}", 
-		          "average",
+		          "\\makecell[l]{Average Ct}",
 		          "\\makecell[l]{$\\Delta Ct$ of\\\\Average Ct}")
 
 	return (display)
