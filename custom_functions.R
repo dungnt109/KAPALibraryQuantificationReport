@@ -1,8 +1,8 @@
-render_KAPA_template1 <- function(run, summary){
+render_KAPA_template1 <- function(run, summary, analysis_type){
 
 	file_path <- run$Folder
 
-        threshold <- run$Threshold
+    threshold <- run$Threshold
 
 	input_type <- run$InputType
 
@@ -194,7 +194,7 @@ render_KAPA_template1 <- function(run, summary){
 	          "Average Ct",
 	          "Δ Ct of Average Ct")
 
-	write_to_excel(paste0("Standard Curve (Set ", index ,")"), df_write, "KAPA Library Quantification")
+	write_to_excel(paste0("Standard Curve (Set ", index ,")"), df_write, analysis_type)
 
 
 	return(list(latex=knitr::knit_child("KAPA_template1.Rmd", quiet = TRUE, envir = environment()), summary = summary))
@@ -203,7 +203,7 @@ render_KAPA_template1 <- function(run, summary){
 }
 
 
-render_KAPA_template3 <- function(run, summary){
+render_KAPA_template3 <- function(run, summary, analysis_type){
 
 	file_path <- run$Folder
 
@@ -395,7 +395,7 @@ render_KAPA_template3 <- function(run, summary){
 	          "Δ Ct of Replicates", 
 	          "Average Ct")
 
-	write_to_excel(paste0("Import (Set ", import_index , ")"), df_write, "KAPA Library Quantification")
+	write_to_excel(paste0("Import (Set ", import_index , ")"), df_write, analysis_type)
 
 
 
