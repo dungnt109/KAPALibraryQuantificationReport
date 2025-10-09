@@ -88,5 +88,6 @@ library(knitr)
 library(flextable)
 library(dplyr)
 library(kableExtra)
+library(openxlsx)
 
-render("./main.Rmd", params = list(), output_file = paste( analysis_type, "_Report_", generated_date, "_V1.0.pdf", sep="")) 
+render("./main.Rmd", params = list(), output_file = paste( analysis_type, "_Report_", format(Sys.time(), format="%Y-%m-%d"), "_V1.0.pdf", sep="")) 

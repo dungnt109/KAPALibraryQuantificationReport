@@ -182,6 +182,8 @@ render_KAPA_template1 <- function(run, summary){
 				       TotalSamples <- "N.A.", 
 				       Status <- overall_qc_status))
 
+	write_to_excel(paste0("Standard Curve (Set ", index ,")"), display, "KAPA Library Quantification")
+
 
 	return(list(latex=knitr::knit_child("KAPA_template1.Rmd", quiet = TRUE, envir = environment()), summary = summary))
 
@@ -370,11 +372,45 @@ render_KAPA_template3 <- function(run, summary){
 				       TotalSamples <- number_of_samples, 
 				       Status <- overall_qc_status))
 
+	write_to_excel(paste0("Import (Set ", import_index , ")"), display, "KAPA Library Quantification")
+
 
 
 	return(list(latex=knitr::knit_child("KAPA_template3.Rmd", quiet = TRUE, envir = environment()), summary = summary))
 
 }
+
+
+write_to_excel <- function(sheet_name, df, analysis_type){
+
+	generated_date <- format(Sys.time(), format="%Y-%m-%d")
+
+	file_path <- paste(analysis_type, "_Result_", generated_date, "_V1.0.xlsx", sep="")
+
+	if (file.exists(file_path)){
+
+		wb <- loadWorkbook(file_path)
+
+
+	} else {
+
+		wb <- createWorkbook()
+
+
+	}
+
+	addWorksheet(wb, sheet_name)
+
+	writeData(wb, sheet = sheet_name, x = analysis_type, startRow = 1, startCol = 1)
+
+	writeData(wb, sheet = sheet_name, x = sheet_name, startRow = 3, startCol = 1)
+
+	writeData(wb, sheet = sheet_name, x = df, startRow = 5)
+
+	saveWorkbook(wb, file_path, overwrite = TRUE)
+
+}
+
 
 get_experiment_information <- function(file_path){
 	data <- read.csv(file_path, sep=",", header=FALSE)
