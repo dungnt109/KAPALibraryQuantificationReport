@@ -33,7 +33,7 @@ Run Number: `r run_no`
 
 Remarks (if any):
 
-\vspace{2cm}
+\vspace{6cm}
 \renewcommand{\arraystretch}{2}
 \begin{tabularx}{\textwidth}{p{3cm}p{6cm}p{3cm}p{6cm}}
 Performed By: &  `r performed_by`    & Verified By: & \underline{\hspace{5cm}}  \\
