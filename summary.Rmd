@@ -14,7 +14,7 @@ colnames(summary) <- c("\\makecell[l]{No.}",
                        "\\makecell[l]{Threshold}", 
                        "\\makecell[l]{Lot No.\\\\of Kit}", 
                        "\\makecell[l]{Opening Date\\\\of Kit}", 
-                       "\\makecell[l]{No. of\\\\Samples}", 
+                       "\\makecell[l]{No. of Samples}", 
                        "\\makecell[l]{Overall QC Status}")
  
 kbl(summary,

@@ -505,12 +505,12 @@ get_display_df <- function(df){
 	colnames(display) <- c("\\makecell[l]{Well}", 
 		          "\\makecell[l]{Sample}", 
 		          "\\makecell[l]{Type}", 
-		          "\\makecell[l]{Given\\\\Concentration\\\\(copies)}", 
-		          "\\makecell[l]{Calculated\\\\Concentration\\\\(copies)}", 
+		          "\\makecell[l]{Given Concentration\\\\(copies)}", 
+		          "\\makecell[l]{Calculated Concentration\\\\(copies)}", 
 		          "\\makecell[l]{Ct Value}", 
-		          "\\makecell[l]{$\\Delta Ct$ of Replicates}", 
+		          "\\makecell[l]{$\\Delta Ct$ of\\\\Replicates}", 
 		          "average",
-		          "\\makecell[l]{$\\Delta Ct$ of Average Ct}")
+		          "\\makecell[l]{$\\Delta Ct$ of\\\\Average Ct}")
 
 	return (display)
 
