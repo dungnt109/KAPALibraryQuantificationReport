@@ -34,7 +34,6 @@ header-includes:
 
 \pagestyle{plain}
 
-
 \begin{center}
 \large\textbf{VIVA-NUS CenTRAL} \\
 \large\textbf{ Yong Loo Lin School of Medicine} \\
@@ -64,15 +63,21 @@ for (i in 1:nrow(runs)) {
 
 	run <- runs[i,] 
 
-	if (input_type == "Standards") {
-            result = render_KAPA_template1(run, summary)
-	    summary <- result$summary 
-	} else if (input_type == "Standard Curve (with samples)") {
+	if (analysis_type == "KAPA Library Quantification"){
 
-	} else if (input_type == "Import"){
-            result = render_KAPA_template3(run, summary)
-	    summary <- result$summary
-	} 
+		if (input_type == "Standards") {
+            		result = render_KAPA_template1(run, summary)
+	    		summary <- result$summary 
+		} else if (input_type == "Standard Curve (with samples)") {
+
+		} else if (input_type == "Import"){
+            		result = render_KAPA_template3(run, summary)
+	    		summary <- result$summary
+		} 
+	} else if (analysis_type == "Albumin Quantification") {
+
+
+	}
 
 	cat(result$latex) 
 
