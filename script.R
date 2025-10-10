@@ -89,7 +89,7 @@ globalVar <- list(
    analysis_type = analysis_type, 
    generated_date = generated_date, 
    version_number = version_number, 
-   excel_file_name = paste(analysis_type, "_Result_", generated_date, "_", version_number, ".xlsx", sep="")
+   excel_file_name = paste(analysis_type, "_Result_", gsub(":", "_", generated_date), "_", version_number, ".xlsx", sep="")
 )
 
 
@@ -100,4 +100,4 @@ library(dplyr)
 library(kableExtra)
 library(openxlsx)
 
-render("./main.Rmd", params = list(), output_file = paste( analysis_type, "_Report_", generated_date, "_", version_number, ".pdf", sep="")) 
+render("./main.Rmd", params = list(), output_file = paste( analysis_type, "_Report_", gsub(":", "_", generated_date), "_", version_number, ".pdf", sep="")) 
