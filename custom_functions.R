@@ -184,15 +184,6 @@ render_KAPA_template1 <- function(run, summary, analysis_type){
 
 	df_write <- display
 
-	colnames(df_write) <- c("Well", 
-	          "Sample", 
-	          "Type", 
-	          "Given Concentration(copies)", 
-	          "Calculated Concentration(copies)", 
-	          "Ct Value", 
-	          "Δ Ct of Replicates", 
-	          "Average Ct",
-	          "Δ Ct of Average Ct")
 
 	write_to_excel(paste0("Standard Curve (Set ", index ,")"), df_write, analysis_type)
 
@@ -201,6 +192,7 @@ render_KAPA_template1 <- function(run, summary, analysis_type){
 
 
 }
+
 
 
 render_KAPA_template3 <- function(run, summary, analysis_type){
@@ -386,14 +378,6 @@ render_KAPA_template3 <- function(run, summary, analysis_type){
 
 	df_write <- display 
 
-	colnames(df_write) <- c("Well", 
-	          "Sample", 
-	          "Type", 
-	          "Given Concentration(copies)", 
-	          "Calculated Concentration(copies)", 
-	          "Ct Value", 
-	          "Δ Ct of Replicates", 
-	          "Average Ct")
 
 	write_to_excel(paste0("Import (Set ", import_index , ")"), df_write, analysis_type)
 
@@ -403,8 +387,25 @@ render_KAPA_template3 <- function(run, summary, analysis_type){
 
 }
 
+change_col_names <- function(colnames){
+
+	ret <- gsub("Delta", "Δ", colnames)
+	ret <- gsub("\\\\", " ", ret) 
+	ret <- gsub("makecell\\[l\\]\\{", "", ret)
+	ret <- gsub("\\}", "", ret) 
+	ret <- gsub("  ", " ", ret)
+	ret <- gsub("\\$", "", ret) 
+	ret <- trimws(ret)
+
+
+	return(ret)
+ 
+}
+
 
 write_to_excel <- function(sheet_name, df, analysis_type){
+
+	colnames(df) <- change_col_names(colnames(df))
 
 	generated_date <- format(Sys.time(), format="%Y-%m-%d")
 

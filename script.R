@@ -3,9 +3,9 @@ source("custom_functions.R")
 
 generated_date <- format(Sys.time(), format="%Y-%m-%d %H:%M:%S")
 
-version_number <- "v1.0"
+version_number <- "V1.0"
 
-pipeline_version <- "Version 1.0, 09 Oct 2025"
+pipeline_version <- "Version 1.0, 10 Oct 2025"
 
 performed_by = run_by_question()
 
@@ -78,7 +78,7 @@ for (i in 1:nrow(runs)) {
 
 #	print(runs[i, "Folder"])
 
-	#render_template1(run, summary)
+	#render_KAPA_template1(run, summary, analysis_type)
 
 }
 
@@ -90,4 +90,4 @@ library(dplyr)
 library(kableExtra)
 library(openxlsx)
 
-render("./main.Rmd", params = list(), output_file = paste( analysis_type, "_Report_", format(Sys.time(), format="%Y-%m-%d"), "_V1.0.pdf", sep="")) 
+render("./main.Rmd", params = list(), output_file = paste( analysis_type, "_Report_", format(Sys.time(), format="%Y-%m-%d"), "_", version_number, ".pdf", sep="")) 
