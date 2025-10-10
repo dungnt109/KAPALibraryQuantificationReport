@@ -1,4 +1,4 @@
-render_KAPA_template1 <- function(run, summary, analysis_type){
+render_KAPA_template1 <- function(run, summary, globalVar){
 
 	file_path <- run$Folder
 
@@ -185,7 +185,7 @@ render_KAPA_template1 <- function(run, summary, analysis_type){
 	df_write <- display
 
 
-	write_to_excel(paste0("Standard Curve (Set ", index ,")"), df_write, analysis_type)
+	write_to_excel(paste0("Standard Curve (Set ", index ,")"), df_write, globalVar)
 
 
 	return(list(latex=knitr::knit_child("KAPA_template1.Rmd", quiet = TRUE, envir = environment()), summary = summary))
@@ -195,7 +195,7 @@ render_KAPA_template1 <- function(run, summary, analysis_type){
 
 
 
-render_KAPA_template3 <- function(run, summary, analysis_type){
+render_KAPA_template3 <- function(run, summary, globalVar){
 
 	file_path <- run$Folder
 
@@ -379,7 +379,7 @@ render_KAPA_template3 <- function(run, summary, analysis_type){
 	df_write <- display 
 
 
-	write_to_excel(paste0("Import (Set ", import_index , ")"), df_write, analysis_type)
+	write_to_excel(paste0("Import (Set ", import_index , ")"), df_write, globalVar)
 
 
 
@@ -403,13 +403,13 @@ change_col_names <- function(colnames){
 }
 
 
-write_to_excel <- function(sheet_name, df, analysis_type){
+write_to_excel <- function(sheet_name, df, globalVar){
 
 	colnames(df) <- change_col_names(colnames(df))
 
 	generated_date <- format(Sys.time(), format="%Y-%m-%d")
 
-	file_path <- paste(analysis_type, "_Result_", generated_date, "_V1.0.xlsx", sep="")
+	file_path <- globalVar$excel_file_name 
 
 	if (file.exists(file_path)){
 
@@ -425,7 +425,7 @@ write_to_excel <- function(sheet_name, df, analysis_type){
 
 	addWorksheet(wb, sheet_name)
 
-	writeData(wb, sheet = sheet_name, x = analysis_type, startRow = 1, startCol = 1)
+	writeData(wb, sheet = sheet_name, x = globalVar$analysis_type, startRow = 1, startCol = 1)
 
 	writeData(wb, sheet = sheet_name, x = sheet_name, startRow = 3, startCol = 1)
 
@@ -556,7 +556,7 @@ get_display_df <- function(df){
 
 	display$delta_average = ifelse(is.na(as.numeric(df$delta_average)),  "", sprintf("%#.2f", df$delta_average) )
 
-	display$`Given Concentration` = ifelse(is.na(as.numeric(df$`Given Concentration`)),  "", format(df$`Given Concentration`, scientific = FALSE))
+	display$`Given Concentration` = ifelse(is.na(as.numeric(df$`Given Concentration`)),  "", trimws(format(df$`Given Concentration`, scientific = FALSE)))
 
 	display$Sample <- gsub("_", "\\\\_", display$Sample)
 

@@ -83,6 +83,16 @@ for (i in 1:nrow(runs)) {
 }
 
 
+     
+
+globalVar <- list(
+   analysis_type = analysis_type, 
+   generated_date = generated_date, 
+   version_number = version_number, 
+   excel_file_name = paste(analysis_type, "_Result_", generated_date, "_", version_number, ".xlsx", sep="")
+)
+
+
 library(rmarkdown)
 library(knitr)
 library(flextable)
@@ -90,4 +100,4 @@ library(dplyr)
 library(kableExtra)
 library(openxlsx)
 
-render("./main.Rmd", params = list(), output_file = paste( analysis_type, "_Report_", format(Sys.time(), format="%Y-%m-%d"), "_", version_number, ".pdf", sep="")) 
+render("./main.Rmd", params = list(), output_file = paste( analysis_type, "_Report_", generated_date, "_", version_number, ".pdf", sep="")) 
