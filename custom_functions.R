@@ -96,64 +96,12 @@ render_KAPA_template1 <- function(run, summary, globalVar){
 	#Quality Control Checklist
 
 
-	ntc = df$`Ct Value`[df$Type=="NTC"]
-	std6 = df$`Ct Value`[df$Type=="Std-6"]
+	replicate_status <- calculate_replicate_status(df)
 
+	average_status <- calculate_average_status(df)
 
-	ntc_has_numeric = any(!is.na(suppressWarnings(as.numeric(unlist(ntc)))))
+	status6 <- calculate_qc_status_6(df)
 
-	std6_has_numeric = any(!is.na(suppressWarnings(as.numeric(unlist(std6)))))
-
-	if (!ntc_has_numeric) {
-		status6 <- color_text("PASS")
-	} else {
-
-		if (!std6_has_numeric){
-			status6 <- color_text("ALERT")
-		} else {
-			ntc_min = min(suppressWarnings(as.numeric(ntc)), na.rm =TRUE)
-			std6_max = max(suppressWarnings(as.numeric(std6)), na.rm =TRUE)
-
-			if (ntc_min - std6_max >= 3){
-					status6 <- color_text("PASS")
-				} else {
-					status6 <- color_text("ALERT")
-				}
-		}
-
-
-	}
-
-
-	numeric_replicates <- suppressWarnings(as.numeric(df$replicate))
-
-
-	valid_replicates <- numeric_replicates[!is.na(numeric_replicates)]
-
-	if (all(valid_replicates >= -1.5 & valid_replicates <= 1.5)){
-		
-		replicate_status <- color_text("PASS")
-
-	} else {
-		
-		replicate_status <- color_text("ALERT")
-
-	}
-
-	numeric_averages <- suppressWarnings(as.numeric(df$delta_average))
-
-	valid_averages <- numeric_averages[!is.na(numeric_averages)]
-
-
-	if (all(valid_averages >= 3.1 & valid_averages <= 3.6 )){
-		
-		average_status <- color_text("PASS")
-
-	} else {
-		
-		average_status <- color_text("ALERT")
-
-	}
 
 	overall_status = all(grepl("PASS", c(slope_status, 
 		                                 reaction_efficiency_status, 
@@ -190,6 +138,79 @@ render_KAPA_template1 <- function(run, summary, globalVar){
 
 	return(list(latex=knitr::knit_child("KAPA_template1.Rmd", quiet = TRUE, envir = environment()), summary = summary))
 
+
+}
+
+calculate_replicate_status <- function(df){
+
+	numeric_replicates <- suppressWarnings(as.numeric(df$replicate))
+
+	valid_replicates <- numeric_replicates[!is.na(numeric_replicates)]
+
+	if (all(valid_replicates >= -1.5 & valid_replicates <= 1.5)){
+		
+		replicate_status <- color_text("PASS")
+
+	} else {
+		
+		replicate_status <- color_text("ALERT")
+
+	}
+
+	return (replicate_status)
+}
+
+calculate_average_status <- function(df){
+
+	numeric_averages <- suppressWarnings(as.numeric(df$delta_average))
+
+	valid_averages <- numeric_averages[!is.na(numeric_averages)]
+
+
+	if (all(valid_averages >= 3.1 & valid_averages <= 3.6 )){
+		
+		average_status <- color_text("PASS")
+
+	} else {
+		
+		average_status <- color_text("ALERT")
+
+	}
+
+	return(average_status)
+}
+
+calculate_qc_status_6 <- function(df){
+
+	ntc = df$`Ct Value`[df$Type=="NTC"]
+	std6 = df$`Ct Value`[df$Type=="Std-6"]
+
+
+	ntc_has_numeric = any(!is.na(suppressWarnings(as.numeric(unlist(ntc)))))
+
+	std6_has_numeric = any(!is.na(suppressWarnings(as.numeric(unlist(std6)))))
+
+	if (!ntc_has_numeric) {
+		status6 <- color_text("PASS")
+	} else {
+
+		if (!std6_has_numeric){
+			status6 <- color_text("ALERT")
+		} else {
+			ntc_min = min(suppressWarnings(as.numeric(ntc)), na.rm =TRUE)
+			std6_max = max(suppressWarnings(as.numeric(std6)), na.rm =TRUE)
+
+			if (ntc_min - std6_max >= 3){
+					status6 <- color_text("PASS")
+				} else {
+					status6 <- color_text("ALERT")
+				}
+		}
+
+
+	}
+
+	return(status6)
 
 }
 
@@ -278,74 +299,22 @@ render_KAPA_template3 <- function(run, summary, globalVar){
 
 	display <- display[, -c(9)]
 
-	average_standard_3 = mean(df$`Ct Value`[df$Type == "Std-3"], na.rm = TRUE)
 
-	average_standard_6 = mean(df$`Ct Value`[df$Type == "Std-6"], na.rm = TRUE)
 
 	file_path_reference = sub(" Standard Curve Results.*", "", standard_curve_path ) 
 	file_path_reference = paste(file_path_reference, "Run Information.csv", sep="")
 
 	df_ref = get_quantification_result_df(file_path_reference)
 
-	average_standard_3_ref = mean(df_ref$`Ct Value`[df_ref$Type == "Std-3"], na.rm = TRUE)
-
-	average_standard_6_ref = mean(df_ref$`Ct Value`[df_ref$Type == "Std-6"], na.rm = TRUE)
 
 
+	status1 <- calculate_qc_status_1(df, df_ref)
 
-	if (abs(average_standard_3 - average_standard_3_ref) <= 1.5){
-		status1 <- color_text("PASS")
-	} else {
-		status1 <- color_text("ALERT")
-	}
+	status2 <- calculate_qc_status_2(df, df_ref)
 
-	if(abs(average_standard_6 - average_standard_6_ref) <= 1.5){
- 		status2 <- color_text("PASS")
-	} else {
-		status2 <- color_text("ALERT")
-	}
+	status3 <- calculate_qc_status_6(df)
 
-	ntc = df$`Ct Value`[df$Type=="NTC"]
-	std6 = df$`Ct Value`[df$Type=="Std-6"]
-
-
-	ntc_has_numeric = any(!is.na(suppressWarnings(as.numeric(unlist(ntc)))))
-
-	std6_has_numeric = any(!is.na(suppressWarnings(as.numeric(unlist(std6)))))
-
-	if (!ntc_has_numeric) {
-        	status3 <- color_text("PASS")
-	} else {
-
-        	if (!std6_has_numeric){
-                	status3 <- color_text("ALERT")
-        	} else {
-                	ntc_min = min(suppressWarnings(as.numeric(ntc)), na.rm =TRUE)
-                	std6_max = max(suppressWarnings(as.numeric(std6)), na.rm =TRUE)
-
-                	if (ntc_min - std6_max >= 3){
-                                status3 <- color_text("PASS")
-                        } else {
-                                status3 <- color_text("ALERT")
-                        }
-       		 }
-
-
-	}
-
-	numeric_replicates <- suppressWarnings(as.numeric(df$replicate))
-
-	valid_replicates <- numeric_replicates[!is.na(numeric_replicates)]
-
-	if (all(valid_replicates >= -1.5 & valid_replicates <= 1.5)){
-
-        	replicate_status <- color_text("PASS")
-
-	} else {
-
-        	replicate_status <- color_text("ALERT")
-
-	}
+	replicate_status <- calculate_replicate_status(df)
 
 
 	overall_status = all(grepl("PASS", c(status1, status2, status3, replicate_status)))
@@ -355,9 +324,6 @@ render_KAPA_template3 <- function(run, summary, globalVar){
 	} else {
         	overall_qc_status <- color_text("ALERT")
 	}
-
-
-
 
 
 
@@ -384,6 +350,37 @@ render_KAPA_template3 <- function(run, summary, globalVar){
 
 
 	return(list(latex=knitr::knit_child("KAPA_template3.Rmd", quiet = TRUE, envir = environment()), summary = summary))
+
+}
+
+calculate_qc_status_1 <- function(df, df_ref){
+
+	average_standard_3 = mean(df$`Ct Value`[df$Type == "Std-3"], na.rm = TRUE)
+
+	average_standard_3_ref = mean(df_ref$`Ct Value`[df_ref$Type == "Std-3"], na.rm = TRUE)
+
+	if (abs(average_standard_3 - average_standard_3_ref) <= 1.5){
+		status1 <- color_text("PASS")
+	} else {
+		status1 <- color_text("ALERT")
+	}
+
+	return(status1)
+}
+
+calculate_qc_status_2 <- function(df, df_ref){
+
+	average_standard_6 = mean(df$`Ct Value`[df$Type == "Std-6"], na.rm = TRUE)
+
+	average_standard_6_ref = mean(df_ref$`Ct Value`[df_ref$Type == "Std-6"], na.rm = TRUE)
+
+	if(abs(average_standard_6 - average_standard_6_ref) <= 1.5){
+ 		status2 <- color_text("PASS")
+	} else {
+		status2 <- color_text("ALERT")
+	}
+
+	return(status2)
 
 }
 
