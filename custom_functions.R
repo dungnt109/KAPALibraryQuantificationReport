@@ -180,6 +180,26 @@ calculate_average_status <- function(df){
 	return(average_status)
 }
 
+calculate_average_status_albumin <- function(df){
+
+	numeric_averages <- suppressWarnings(as.numeric(df$delta_average))
+
+	valid_averages <- numeric_averages[!is.na(numeric_averages)]
+
+
+	if (all(valid_averages >= 2.6 & valid_averages <= 4.0 )){
+		
+		average_status <- color_text("PASS")
+
+	} else {
+		
+		average_status <- color_text("ALERT")
+
+	}
+
+	return(average_status)
+}
+
 calculate_qc_status_6 <- function(df){
 
 	ntc = df$`Ct Value`[df$Type=="NTC"]
@@ -211,6 +231,11 @@ calculate_qc_status_6 <- function(df){
 	}
 
 	return(status6)
+
+}
+
+calculate_ntc_status_albumin <- function(df){
+
 
 }
 
@@ -382,6 +407,11 @@ calculate_qc_status_2 <- function(df, df_ref){
 
 	return(status2)
 
+}
+
+calculate_qc_status_2_albumin <- function(){
+
+	
 }
 
 change_col_names <- function(colnames){
