@@ -66,6 +66,12 @@ render_KAPA_template1 <- function(run, summary, globalVar){
 	df$replicate[df$Type == "NTC"] <- NA
 	df$average[df$Type == "NTC"] <- NA
 
+	if (globalVar$analysis_type == "Albumin Quantification"){
+
+		df$average[df$Type == "Std-2"] <- NA 
+
+	}
+
 
 	df <- add_delta_average_column(df)
 
@@ -97,29 +103,29 @@ render_KAPA_template1 <- function(run, summary, globalVar){
 
 	if (globalVar$analysis_type == "KAPA Library Quantification" ) {
 
-		slope_status <- calculate_slope_status(standard_curve_result, -3.6 , -3.1)
+		kapa_status1 <- calculate_slope_status(standard_curve_result, -3.6 , -3.1)
 
 		if (reaction_efficiency >= 90 && reaction_efficiency <= 110){
-			reaction_efficiency_status = color_text("PASS")
+			kapa_status2 = color_text("PASS")
 		} else {
-			reaction_efficiency_status = color_text("ALERT")
+			kapa_status2 = color_text("ALERT")
 		}
 
-		r_2_status <- calculate_r_2_status(standard_curve_result, 0.99)
+		kapa_status3 <- calculate_r_2_status(standard_curve_result, 0.99)
 
-		replicate_status <- calculate_replicate_status(df)
+		kapa_status4 <- calculate_replicate_status(df)
 
-		average_status <- calculate_average_status(df)
+		kapa_status5 <- calculate_average_status(df)
 
-		status6 <- calculate_qc_status_6(df)
+		kapa_status6 <- calculate_qc_status_6(df)
 		
-		overall_qc_status <- calculate_overall_qc_status(
-											c(slope_status, 
-			                                 reaction_efficiency_status, 
-			                                 r_2_status, 
-			                                 replicate_status, 
-			                                 average_status, 
-			                                 status6))
+		overall_kapa_qc_status <- calculate_overall_qc_status(
+											c(kapa_status1, 
+			                                  kapa_status2, 
+			                                  kapa_status3, 
+			                                  kapa_status4, 
+			                                  kapa_status5, 
+			                                  kapa_status6))
 		
 
 		summary <- rbind(summary, list(Index <- nrow(summary)+1, 
@@ -129,7 +135,7 @@ render_KAPA_template1 <- function(run, summary, globalVar){
 			       Lot <- lot_no, 
 			       Opening <- opening_date, 
 			       TotalSamples <- "N.A.", 
-			       Status <- overall_qc_status))				
+			       Status <- overall_kapa_qc_status))				
 
 		return(list(latex=knitr::knit_child("KAPA_template1.Rmd", quiet = TRUE, envir = environment()), summary = summary))
 
@@ -461,7 +467,7 @@ render_KAPA_template3 <- function(run, summary, globalVar){
 
 		albumin_status1 <- calculate_qc_status_1(df, df_ref)
 
-		albumin_status2 <- calculate_qc_status_2_albumin()
+		albumin_status2 <- calculate_qc_status_2_albumin(df, df_ref)
 
 		albumin_status3 <- calculate_replicate_status(df)
 
@@ -522,9 +528,19 @@ calculate_qc_status_2 <- function(df, df_ref){
 
 }
 
-calculate_qc_status_2_albumin <- function(){
+calculate_qc_status_2_albumin <- function(df, df_ref){
 
-	return (0)
+	average_unkn = mean(df$`Ct Value`[df$Type == "Unkn"], na.rm = TRUE)
+
+	average_standard_3_ref = mean(df_ref$`Ct Value`[df_ref$Type == "Std-3"], na.rm = TRUE)
+
+	if(abs(average_unkn - average_standard_3_ref) <= 1.5){
+ 		status <- color_text("PASS")
+	} else {
+		status <- color_text("ALERT")
+	}
+
+	return (status)
 
 }
 

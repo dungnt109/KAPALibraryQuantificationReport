@@ -20,9 +20,9 @@ Machine used: & `r machine` \\
 Parameter & Results & QC Status \\
 \hline
 Threshold &   `r threshold`    &     -    \\
-Slope     &  `r slope`       &   `r slope_status`        \\
-Reaction efficiency &  `r reaction_efficiency`  &  `r reaction_efficiency_status`      \\
-$R^2$ Value   &   `r r_2_value`      &      `r r_2_status`     \\
+Slope     &  `r slope`       &   `r kapa_status1`        \\
+Reaction efficiency &  `r reaction_efficiency`  &  `r kapa_status2`      \\
+$R^2$ Value   &   `r r_2_value`      &      `r kapa_status3`     \\
 \hline
 \end{tabular} 
 
@@ -58,14 +58,14 @@ kbl(display,
 \hline
 \textbf{No.} & \textbf{Quality Control Criteria} & \textbf{QC Status} \\
 \hline
-1   & Slope between -3.1 and -3.6 &     `r slope_status`   \\
-2   & Reaction Efficiency 90\%-110\% &  `r reaction_efficiency_status`     \\
-3   & $R^2$ value: $\geq$0.99     &     `r r_2_status`  \\
-4   & $\Delta$Ct of replicates within $\pm$1.5 &   `r replicate_status` \\
-5   & $\Delta$Ct of Average Ct between consecutive Standards: 3.1 to 3.6 & `r average_status` \\
-6   & Lowest Ct of NTC $\geq$3.0 Ct from highest Ct of Standard 6       &  `r status6` \\
+1   & Slope between -3.1 and -3.6 &     `r kapa_status1`   \\
+2   & Reaction Efficiency 90\%-110\% &  `r kapa_status2`     \\
+3   & $R^2$ value: $\geq$0.99     &     `r kapa_status3`  \\
+4   & $\Delta$Ct of replicates within $\pm$1.5 &   `r kapa_status4` \\
+5   & $\Delta$Ct of Average Ct between consecutive Standards: 3.1 to 3.6 & `r kapa_status5` \\
+6   & Lowest Ct of NTC $\geq$3.0 Ct from highest Ct of Standard 6       &  `r kapa_status6` \\
 \hline
-\multicolumn{2}{|l}{Overall QC Status}   &  `r overall_qc_status` \\
+\multicolumn{2}{|l}{Overall QC Status}   &  `r overall_kapa_qc_status` \\
 \hline
 \end{tabularx}
 
