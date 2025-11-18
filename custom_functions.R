@@ -32,23 +32,9 @@ render_KAPA_template1 <- function(run, summary, globalVar){
 	reaction_efficiency <- round(standard_curve_result$Efficiency..)
 	r_2_value <- sprintf("%#.2f", standard_curve_result$R.2)   
 
-	if (round(standard_curve_result$Slope, digits=1) >= -3.6 && round(standard_curve_result$Slope, digits=1) <= -3.1){
-		slope_status = color_text("PASS")
-	} else {
-		slope_status = color_text("ALERT")
-	}
 
-	if (reaction_efficiency >= 90 && reaction_efficiency <= 110){
-		reaction_efficiency_status = color_text("PASS")
-	} else {
-		reaction_efficiency_status = color_text("ALERT")
-	}
 
-	if (round(standard_curve_result$R.2, digits=2) >= 0.99){
-		r_2_status = color_text("PASS")
-	} else {
-		r_2_status = color_text("ALERT")
-	}
+
 
 	#Quantification Results 
 	## figure 
@@ -96,49 +82,125 @@ render_KAPA_template1 <- function(run, summary, globalVar){
 	#Quality Control Checklist
 
 
-	replicate_status <- calculate_replicate_status(df)
-
-	average_status <- calculate_average_status(df)
-
-	status6 <- calculate_qc_status_6(df)
-
-
-	overall_status = all(grepl("PASS", c(slope_status, 
-		                                 reaction_efficiency_status, 
-		                                 r_2_status, 
-		                                 replicate_status, 
-		                                 average_status, 
-		                                 status6)))
-	if (overall_status){
-		overall_qc_status <- color_text("PASS")
-	} else {
-		overall_qc_status <- color_text("ALERT")
-	}
-
 	run_date <- strsplit(file_name, ";")[[1]][1]
 
 	lot_no <- strsplit(strsplit(file_name, "_")[[1]][1], "Lot ")[[1]][2]
 
 	opening_date <- strsplit(strsplit(file_name, " -")[[1]][1], "_")[[1]][2]
 
-	summary <- rbind(summary, list(Index <- nrow(summary)+1, 
-				       Date  <- run_date, 
-				       Type  <- paste0("Standard Curve (Set ", index ,")"), 
-				       Threshold <- threshold, 
-				       Lot <- lot_no, 
-				       Opening <- opening_date, 
-				       TotalSamples <- "N.A.", 
-				       Status <- overall_qc_status))
+
 
 	df_write <- display
 
 
 	write_to_excel(paste0("Standard Curve (Set ", index ,")"), df_write, globalVar)
 
+	if (globalVar$analysis_type == "KAPA Library Quantification" ) {
 
-	return(list(latex=knitr::knit_child("KAPA_template1.Rmd", quiet = TRUE, envir = environment()), summary = summary))
+		slope_status <- calculate_slope_status(standard_curve_result, -3.6 , -3.1)
+
+		if (reaction_efficiency >= 90 && reaction_efficiency <= 110){
+			reaction_efficiency_status = color_text("PASS")
+		} else {
+			reaction_efficiency_status = color_text("ALERT")
+		}
+
+		r_2_status <- calculate_r_2_status(standard_curve_result, 0.99)
+
+		replicate_status <- calculate_replicate_status(df)
+
+		average_status <- calculate_average_status(df)
+
+		status6 <- calculate_qc_status_6(df)
+		
+		overall_qc_status <- calculate_overall_qc_status(
+											c(slope_status, 
+			                                 reaction_efficiency_status, 
+			                                 r_2_status, 
+			                                 replicate_status, 
+			                                 average_status, 
+			                                 status6))
+		
+
+		summary <- rbind(summary, list(Index <- nrow(summary)+1, 
+			       Date  <- run_date, 
+			       Type  <- paste0("Standard Curve (Set ", index ,")"), 
+			       Threshold <- threshold, 
+			       Lot <- lot_no, 
+			       Opening <- opening_date, 
+			       TotalSamples <- "N.A.", 
+			       Status <- overall_qc_status))				
+
+		return(list(latex=knitr::knit_child("KAPA_template1.Rmd", quiet = TRUE, envir = environment()), summary = summary))
+
+	} else if (globalVar$analysis_type == "Albumin Quantification") {
+
+		albumin_status1 <- calculate_slope_status(standard_curve_result, -3.9, -2.9)
+
+		albumin_status2 <- calculate_r_2_status(standard_curve_result, 0.97)
+
+		albumin_status3 <- calculate_replicate_status(df)
+
+		albumin_status4 <- calculate_average_status_albumin(df)
+
+		albumin_status5 <- calculate_ntc_status_albumin(df)
+
+		overall_albumin_qc_status <- calculate_overall_qc_statuc(c(
+										 albumin_status1, 
+		                                 albumin_status2, 
+		                                 albumin_status3, 
+		                                 albumin_status4, 
+		                                 albumin_status5
+		                                 ))
+		
+
+		summary <- rbind(summary, list(Index <- nrow(summary)+1, 
+			       Date  <- run_date, 
+			       Type  <- paste0("Standard Curve (Set ", index ,")"), 
+			       Threshold <- threshold, 
+			       Lot <- lot_no, 
+			       Opening <- opening_date, 
+			       TotalSamples <- "N.A.", 
+			       Status <- overall_albumin_qc_status))
+
+		return(list(latex=knitr::knit_child("Albumin_template1.Rmd", quiet = TRUE, envir = environment()), summary = summary))
+	}
 
 
+}
+
+calculate_overall_qc_statuc <- function(array){
+
+	if (all(grepl("PASS", array))){
+		status <- color_text("PASS")
+	} else {
+		status <- color_text("ALERT")
+	}
+	return(status)
+
+}
+
+calculate_slope_status <- function(standard_curve_result, lower, upper){
+
+	if (round(standard_curve_result$Slope, digits=1) >= lower && round(standard_curve_result$Slope, digits=1) <= upper){
+		status = color_text("PASS")
+	} else {
+		status = color_text("ALERT")
+	}
+
+	return(status)
+
+}
+
+calculate_r_2_status <- function(standard_curve_result, threshold){
+
+	if (round(standard_curve_result$R.2, digits=2) >= threshold){
+		status = color_text("PASS")
+	} else {
+		status = color_text("ALERT")
+	}
+
+	return(status)
 }
 
 calculate_replicate_status <- function(df){
@@ -236,6 +298,29 @@ calculate_qc_status_6 <- function(df){
 
 calculate_ntc_status_albumin <- function(df){
 
+	concentration = df$concentration[df$Type=="NTC"]
+
+	numeric_concentration <- suppressWarnings(as.numeric(concentration))
+
+	valid_concentration <- numeric_concentration[!is.na(numeric_concentration)]
+
+	ct = df$Ct[df$Type=="NTC"]
+
+	numeric_ct <- suppressWarnings(as.numeric(ct))
+
+	valid_ct <- numeric_ct[!is.na(numeric_ct)]
+
+	if(all(valid_concentration < 10) || all(valid_ct >= 40)){
+		
+		status <- color_text("PASS")
+
+	} else {
+		
+		status <- color_text("ALERT")
+
+	}
+
+	return(status)
 
 }
 
@@ -332,33 +417,34 @@ render_KAPA_template3 <- function(run, summary, globalVar){
 	df_ref = get_quantification_result_df(file_path_reference)
 
 
-
-	status1 <- calculate_qc_status_1(df, df_ref)
-
-	status2 <- calculate_qc_status_2(df, df_ref)
-
-	status3 <- calculate_qc_status_6(df)
-
-	replicate_status <- calculate_replicate_status(df)
-
-
-	overall_status = all(grepl("PASS", c(status1, status2, status3, replicate_status)))
-
-	if (overall_status){
-        	overall_qc_status <- color_text("PASS")
-	} else {
-        	overall_qc_status <- color_text("ALERT")
-	}
-
-
-
 	run_date <- strsplit(file_name, ";")[[1]][1]
 
 	lot_no <- strsplit(strsplit(file_name, "_")[[1]][1], "Lot ")[[1]][2]
 
 	opening_date <- strsplit(strsplit(file_name, " -")[[1]][1], "_")[[1]][2]
 
-	summary <- rbind(summary, list(Index <- nrow(summary)+1, 
+
+
+	df_write <- display 
+
+
+	write_to_excel(paste0("Import (Set ", import_index , ")"), df_write, globalVar)
+
+	if (globalVar$analysis_type == "KAPA Library Quantification" ) {
+
+		status1 <- calculate_qc_status_1(df, df_ref)
+
+		status2 <- calculate_qc_status_2(df, df_ref)
+
+		status3 <- calculate_qc_status_6(df)
+
+		replicate_status <- calculate_replicate_status(df)
+
+
+		overall_qc_status <- calculate_overall_qc_statuc(c(status1, status2, status3, replicate_status ))
+
+
+		summary <- rbind(summary, list(Index <- nrow(summary)+1, 
 				       Date <- run_date, 
 				       Type <- paste0("Import (Set ", import_index , ")"),  
 				       Threshold <- threshold, 
@@ -367,14 +453,41 @@ render_KAPA_template3 <- function(run, summary, globalVar){
 				       TotalSamples <- number_of_samples, 
 				       Status <- overall_qc_status))
 
-	df_write <- display 
 
 
-	write_to_excel(paste0("Import (Set ", import_index , ")"), df_write, globalVar)
+		return(list(latex=knitr::knit_child("KAPA_template3.Rmd", quiet = TRUE, envir = environment()), summary = summary))
+
+	} else if (globalVar$analysis_type == "Albumin Quantification") {
+
+		albumin_status1 <- calculate_qc_status_1(df, df_ref)
+
+		albumin_status2 <- calculate_qc_status_2_albumin()
+
+		albumin_status3 <- calculate_replicate_status(df)
+
+		albumin_status4 <- calculate_ntc_status_albumin(df)
+
+		overall_albumin_qc_status <- calculate_overall_qc_statuc(c(
+										 albumin_status1, 
+		                                 albumin_status2, 
+		                                 albumin_status3, 
+		                                 albumin_status4
+		                                 
+		                                 ))
+
+		summary <- rbind(summary, list(Index <- nrow(summary)+1, 
+				       Date <- run_date, 
+				       Type <- paste0("Import (Set ", import_index , ")"),  
+				       Threshold <- threshold, 
+				       Lot <- lot_no, 
+				       Opening <- opening_date, 
+				       TotalSamples <- number_of_samples, 
+				       Status <- overall_albumin_qc_status))
+
+		return(list(latex=knitr::knit_child("Albumin_template3.Rmd", quiet = TRUE, envir = environment()), summary = summary))
 
 
-
-	return(list(latex=knitr::knit_child("KAPA_template3.Rmd", quiet = TRUE, envir = environment()), summary = summary))
+	}
 
 }
 
@@ -411,7 +524,8 @@ calculate_qc_status_2 <- function(df, df_ref){
 
 calculate_qc_status_2_albumin <- function(){
 
-	
+	return (0)
+
 }
 
 change_col_names <- function(colnames){

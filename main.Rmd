@@ -76,6 +76,17 @@ for (i in 1:nrow(runs)) {
 		} 
 	} else if (analysis_type == "Albumin Quantification") {
 
+		if(input_type == "Standard Curve"){
+			result = render_KAPA_template1(run, summary, globalVar)
+			summary <- result$summary
+
+		} else if (input_type == "Import"){
+
+			result = render_KAPA_template3(run, summary, globalVar)
+			summary <- result$summary
+
+		}
+
 
 	}
 

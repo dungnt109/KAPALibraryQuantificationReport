@@ -1,0 +1,71 @@
+```{r, echo=FALSE, warning = FALSE}
+
+
+```
+\section*{\textbf{\underline{Standard Curve (Set `r index`)}}}
+
+\subsection*{\textbf{Experiment Information}}
+
+\begin{tabular}{l l}
+File name: &  `r file_name` \\
+Run started & `r run_started` \\
+Run ended & `r run_ended` \\
+Machine used: & `r machine` \\
+\end{tabular}
+
+\subsection*{\textbf{Quantification Information}}
+
+\begin{tabular}{|c | c | c |}
+\hline
+Parameter & Results & QC Status \\
+\hline
+Threshold &   `r threshold`    &     -    \\
+Slope     &  `r slope`       &   `r albumin_status1`        \\
+Reaction efficiency &  `r reaction_efficiency`  &  -      \\
+$R^2$ Value   &   `r r_2_value`      &      `r albumin_status2`     \\
+\hline
+\end{tabular} 
+
+\subsection*{\textbf{Quantification Results} }
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{`r figure_path`}
+    \label{fig:yourlabel}
+\end{figure}
+
+```{r , fig.align="center", echo = FALSE}
+
+ 
+kbl(display,
+    format = "latex",
+    booktabs = TRUE,
+    escape = FALSE,
+    align = "l", 
+    linesep = "") 
+
+
+
+
+```
+
+
+
+\subsection*{\textbf{Quality Control (QC) Checklist}}
+
+
+\begin{tabularx}{\textwidth} {|c | X | c|}
+\hline
+\textbf{No.} & \textbf{Quality Control Criteria} & \textbf{QC Status} \\
+\hline
+1   & Slope between -2.9 and -3.9 &     `r albumin_status1`   \\
+2   & $R^2$ value: $\geq$0.97     &     `r albumin_status2`  \\
+3   & $\Delta$Ct of replicates within $\pm$1.5 &   `r albumin_status3` \\
+4   & $\Delta$Ct of Average Ct between consecutive 10-fold dilution: 2.6 to 4.0 & `r albumin_status4` \\
+5   & NTC: Calculated Concentration <10 or Ct $\geq$40     &  `r albumin_status5` \\
+\hline
+\multicolumn{2}{|l}{Overall QC Status}   &  `r overall_albumin_qc_status` \\
+\hline
+\end{tabularx}
+
+\newpage  

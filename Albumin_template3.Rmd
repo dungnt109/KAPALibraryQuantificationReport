@@ -1,0 +1,56 @@
+\newpage
+
+\section*{\textbf{\underline{Import (Set `r import_index`)}}}
+
+\subsection*{\textbf{Experiment Information}}
+
+\begin{tabular}{l l}
+File name: &  `r file_name` \\
+Run started & `r run_started` \\
+Run ended & `r run_ended` \\
+Machine used: & `r machine` \\
+\end{tabular}
+
+File name of reference Standard Curve: `r sub(" - Run Information.*", "", basename(file_path_reference))`
+
+
+\subsection*{\textbf{Quantification Results} }
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{`r figure_path`}
+    \label{fig:yourlabel}
+\end{figure}
+
+```{r, fig.align="center", echo = FALSE}
+
+ 
+kbl(display,
+    format = "latex",
+    booktabs = TRUE,
+    escape = FALSE,
+    row.names = FALSE, 
+    align = "l", 
+    linesep = "") 
+
+```
+
+\subsection*{\textbf{Quality Control (QC) Checklist}}
+
+
+\begin{tabularx}{\textwidth} {|c | X | c|}
+\hline
+\textbf{No.} & \textbf{Quality Control Criteria} & \textbf{QC Status} \\
+\hline
+1   & $\Delta$Ct of Average Ct for Standard 3 between Standard Curve and Import Curve within $\pm$1.5 &    `r albumin_status1`    \\
+2   & $\Delta$Ct of Average Ct between samples in Import Curve and Standard 3 in Standard Curve within $\pm$1.5 &    `r albumin_status2`    \\
+3   & $\Delta$Ct of replicates within $\pm$1.5  &  `r albumin_status3` \\
+4   & NTC: Calculated Concentration <10 or Ct$\geq$40   &    `r albumin_status4`    \\
+\hline
+\multicolumn{2}{|l}{Overall QC Status}   & `r overall_albumin_qc_status`\\
+\hline
+\end{tabularx}
+
+
+
+
