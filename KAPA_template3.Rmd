@@ -42,12 +42,12 @@ kbl(display,
 \hline
 \textbf{No.} & \textbf{Quality Control Criteria} & \textbf{QC Status} \\
 \hline
-1   & $\Delta$Ct of Average Ct for Standard 3 between Standard Curve and Import Curve within $\pm$1.5 &    `r status1`    \\
-2   & $\Delta$Ct of Average Ct for Standard 6 between Standard Curve and Import Curve within $\pm$1.5 &    `r status2`    \\
-3   & Lowest Ct of NTC $\geq$3.0 Ct from highest Ct of Standard 6 &    `r status3`    \\
-4   & $\Delta$Ct of replicates within $\pm$1.5  &  `r replicate_status` \\
+1   & $\Delta$Ct of Average Ct for Standard 3 between Standard Curve and Import Curve within $\pm$1.5 &    `r kapa_status1`    \\
+2   & $\Delta$Ct of Average Ct for Standard 6 between Standard Curve and Import Curve within $\pm$1.5 &    `r kapa_status2`    \\
+3   & Lowest Ct of NTC $\geq$3.0 Ct from highest Ct of Standard 6 &    `r kapa_status3`    \\
+4   & $\Delta$Ct of replicates within $\pm$1.5  &  `r kapa_status4` \\
 \hline
-\multicolumn{2}{|l}{Overall QC Status}   & `r overall_qc_status`\\
+\multicolumn{2}{|l}{Overall QC Status}   & `r overall_kapa_qc_status`\\
 \hline
 \end{tabularx}
 

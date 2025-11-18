@@ -1,4 +1,4 @@
-render_KAPA_template1 <- function(run, summary, globalVar){
+render_template1 <- function(run, summary, globalVar){
 
 	file_path <- run$Folder
 
@@ -332,7 +332,7 @@ calculate_ntc_status_albumin <- function(df){
 
 
 
-render_KAPA_template3 <- function(run, summary, globalVar){
+render_template3 <- function(run, summary, globalVar){
 
 	file_path <- run$Folder
 
@@ -438,16 +438,16 @@ render_KAPA_template3 <- function(run, summary, globalVar){
 
 	if (globalVar$analysis_type == "KAPA Library Quantification" ) {
 
-		status1 <- calculate_qc_status_1(df, df_ref)
+		kapa_status1 <- calculate_qc_status_1(df, df_ref)
 
-		status2 <- calculate_qc_status_2(df, df_ref)
+		kapa_status2 <- calculate_qc_status_2(df, df_ref)
 
-		status3 <- calculate_qc_status_6(df)
+		kapa_status3 <- calculate_qc_status_6(df)
 
-		replicate_status <- calculate_replicate_status(df)
+		kapa_status4 <- calculate_replicate_status(df)
 
 
-		overall_qc_status <- calculate_overall_qc_statuc(c(status1, status2, status3, replicate_status ))
+		overall_kapa_qc_status <- calculate_overall_qc_statuc(c(kapa_status1, kapa_status2, kapa_status3, kapa_status4 ))
 
 
 		summary <- rbind(summary, list(Index <- nrow(summary)+1, 
@@ -457,7 +457,7 @@ render_KAPA_template3 <- function(run, summary, globalVar){
 				       Lot <- lot_no, 
 				       Opening <- opening_date, 
 				       TotalSamples <- number_of_samples, 
-				       Status <- overall_qc_status))
+				       Status <- overall_kapa_qc_status))
 
 
 

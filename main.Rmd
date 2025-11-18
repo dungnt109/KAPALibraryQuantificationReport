@@ -66,23 +66,23 @@ for (i in 1:nrow(runs)) {
 	if (analysis_type == "KAPA Library Quantification"){
 
 		if (input_type == "Standard Curve") {
-            		result = render_KAPA_template1(run, summary, globalVar)
+            		result = render_template1(run, summary, globalVar)
 	    		summary <- result$summary 
 		} else if (input_type == "Standard Curve (with samples)") {
 
 		} else if (input_type == "Import"){
-            		result = render_KAPA_template3(run, summary, globalVar)
+            		result = render_template3(run, summary, globalVar)
 	    		summary <- result$summary
 		} 
 	} else if (analysis_type == "Albumin Quantification") {
 
 		if(input_type == "Standard Curve"){
-			result = render_KAPA_template1(run, summary, globalVar)
+			result = render_template1(run, summary, globalVar)
 			summary <- result$summary
 
 		} else if (input_type == "Import"){
 
-			result = render_KAPA_template3(run, summary, globalVar)
+			result = render_template3(run, summary, globalVar)
 			summary <- result$summary
 
 		}
