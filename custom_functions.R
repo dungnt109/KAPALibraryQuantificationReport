@@ -117,7 +117,7 @@ render_template1 <- function(run, summary, globalVar){
 
 		kapa_status5 <- calculate_average_status(df)
 
-		kapa_status6 <- calculate_qc_status_6(df)
+		kapa_status6 <- calculate_ntc_std6_status(df)
 		
 		overall_kapa_qc_status <- calculate_overall_qc_status(
 											c(kapa_status1, 
@@ -147,11 +147,11 @@ render_template1 <- function(run, summary, globalVar){
 
 		albumin_status3 <- calculate_replicate_status(df)
 
-		albumin_status4 <- calculate_average_status_albumin(df)
+		albumin_status4 <- calculate_albumin_average_status(df)
 
-		albumin_status5 <- calculate_ntc_status_albumin(df)
+		albumin_status5 <- calculate_ntc_status(df)
 
-		overall_albumin_qc_status <- calculate_overall_qc_statuc(c(
+		overall_albumin_qc_status <- calculate_overall_qc_status(c(
 										 albumin_status1, 
 		                                 albumin_status2, 
 		                                 albumin_status3, 
@@ -175,7 +175,7 @@ render_template1 <- function(run, summary, globalVar){
 
 }
 
-calculate_overall_qc_statuc <- function(array){
+calculate_overall_qc_status <- function(array){
 
 	if (all(grepl("PASS", array))){
 		status <- color_text("PASS")
@@ -209,6 +209,7 @@ calculate_r_2_status <- function(standard_curve_result, threshold){
 	return(status)
 }
 
+# Delta Ct of replicates within +- 1.5
 calculate_replicate_status <- function(df){
 
 	numeric_replicates <- suppressWarnings(as.numeric(df$replicate))
@@ -228,6 +229,7 @@ calculate_replicate_status <- function(df){
 	return (replicate_status)
 }
 
+#Delta Ct of Average Ct between consecutive Standards: 3.1 to 3.6 
 calculate_average_status <- function(df){
 
 	numeric_averages <- suppressWarnings(as.numeric(df$delta_average))
@@ -248,7 +250,8 @@ calculate_average_status <- function(df){
 	return(average_status)
 }
 
-calculate_average_status_albumin <- function(df){
+#Delta Ct of Average Ct between consecutive 10-fold dilution: 2.6 to 4.0 
+calculate_albumin_average_status <- function(df){
 
 	numeric_averages <- suppressWarnings(as.numeric(df$delta_average))
 
@@ -268,7 +271,8 @@ calculate_average_status_albumin <- function(df){
 	return(average_status)
 }
 
-calculate_qc_status_6 <- function(df){
+#Lowest Ct of NTC >= 3.0 Ct from highest Ct of Standard 6
+calculate_ntc_std6_status <- function(df){
 
 	ntc = df$`Ct Value`[df$Type=="NTC"]
 	std6 = df$`Ct Value`[df$Type=="Std-6"]
@@ -302,7 +306,8 @@ calculate_qc_status_6 <- function(df){
 
 }
 
-calculate_ntc_status_albumin <- function(df){
+#NTC: Calculated Concentration <10 or Ct >= 40
+calculate_ntc_status <- function(df){
 
 	concentration = df$concentration[df$Type=="NTC"]
 
@@ -438,16 +443,16 @@ render_template3 <- function(run, summary, globalVar){
 
 	if (globalVar$analysis_type == "KAPA Library Quantification" ) {
 
-		kapa_status1 <- calculate_qc_status_1(df, df_ref)
+		kapa_status1 <- calculate_std3_status(df, df_ref)
 
-		kapa_status2 <- calculate_qc_status_2(df, df_ref)
+		kapa_status2 <- calculate_std6_status(df, df_ref)
 
-		kapa_status3 <- calculate_qc_status_6(df)
+		kapa_status3 <- calculate_ntc_std6_status(df)
 
 		kapa_status4 <- calculate_replicate_status(df)
 
 
-		overall_kapa_qc_status <- calculate_overall_qc_statuc(c(kapa_status1, kapa_status2, kapa_status3, kapa_status4 ))
+		overall_kapa_qc_status <- calculate_overall_qc_status(c(kapa_status1, kapa_status2, kapa_status3, kapa_status4 ))
 
 
 		summary <- rbind(summary, list(Index <- nrow(summary)+1, 
@@ -465,15 +470,15 @@ render_template3 <- function(run, summary, globalVar){
 
 	} else if (globalVar$analysis_type == "Albumin Quantification") {
 
-		albumin_status1 <- calculate_qc_status_1(df, df_ref)
+		albumin_status1 <- calculate_std3_status(df, df_ref)
 
-		albumin_status2 <- calculate_qc_status_2_albumin(df, df_ref)
+		albumin_status2 <- calculate_unkn_std3_status(df, df_ref)
 
 		albumin_status3 <- calculate_replicate_status(df)
 
-		albumin_status4 <- calculate_ntc_status_albumin(df)
+		albumin_status4 <- calculate_ntc_status(df)
 
-		overall_albumin_qc_status <- calculate_overall_qc_statuc(c(
+		overall_albumin_qc_status <- calculate_overall_qc_status(c(
 										 albumin_status1, 
 		                                 albumin_status2, 
 		                                 albumin_status3, 
@@ -497,7 +502,8 @@ render_template3 <- function(run, summary, globalVar){
 
 }
 
-calculate_qc_status_1 <- function(df, df_ref){
+#Delta Ct of Average Ct for Standard 3 between Standard Curve and Import Curve within +- 1.5 
+calculate_std3_status <- function(df, df_ref){
 
 	average_standard_3 = mean(df$`Ct Value`[df$Type == "Std-3"], na.rm = TRUE)
 
@@ -512,7 +518,8 @@ calculate_qc_status_1 <- function(df, df_ref){
 	return(status1)
 }
 
-calculate_qc_status_2 <- function(df, df_ref){
+#Delta Ct of Average Ct for Standard 6 between Standard Curve and Import Curve within +- 1.5 
+calculate_std6_status <- function(df, df_ref){
 
 	average_standard_6 = mean(df$`Ct Value`[df$Type == "Std-6"], na.rm = TRUE)
 
@@ -528,7 +535,8 @@ calculate_qc_status_2 <- function(df, df_ref){
 
 }
 
-calculate_qc_status_2_albumin <- function(df, df_ref){
+#Delta Ct of Average Ct between samples in Import Curve and Standard 3 in Standard Curve within +-1.5 
+calculate_unkn_std3_status <- function(df, df_ref){
 
 	average_unkn = mean(df$`Ct Value`[df$Type == "Unkn"], na.rm = TRUE)
 
