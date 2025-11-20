@@ -105,7 +105,15 @@ for (i in 1:nrow(runs)) {
 
 #summary <- result3$summary 
 
-cat(knitr::knit_child("summary.Rmd", quiet = TRUE))
+if (analysis_type == "Albumin Quantification"){ 
+
+	cat(knitr::knit_child("Albumin_summary.Rmd", quiet = TRUE))
+
+} else {
+
+	cat(knitr::knit_child("KAPA_summary.Rmd", quiet = TRUE))
+
+}
 
 ```
 

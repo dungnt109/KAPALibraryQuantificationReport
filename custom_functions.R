@@ -158,15 +158,14 @@ render_template1 <- function(run, summary, globalVar){
 		                                 albumin_status4, 
 		                                 albumin_status5
 		                                 ))
+
 		
 
 		summary <- rbind(summary, list(Index <- nrow(summary)+1, 
 			       Date  <- run_date, 
 			       Type  <- paste0("Standard Curve (Set ", index ,")"), 
 			       Threshold <- threshold, 
-			       Lot <- lot_no, 
-			       Opening <- opening_date, 
-			       TotalSamples <- "N.A.", 
+			       Batch <- strsplit(file_name, " ")[[1]][4], 
 			       Status <- overall_albumin_qc_status))
 
 		return(list(latex=knitr::knit_child("Albumin_template1.Rmd", quiet = TRUE, envir = environment()), summary = summary))
@@ -490,9 +489,7 @@ render_template3 <- function(run, summary, globalVar){
 				       Date <- run_date, 
 				       Type <- paste0("Import (Set ", import_index , ")"),  
 				       Threshold <- threshold, 
-				       Lot <- lot_no, 
-				       Opening <- opening_date, 
-				       TotalSamples <- number_of_samples, 
+				       Batch <- strsplit(basename(file_path_reference), " ")[[1]][4], 
 				       Status <- overall_albumin_qc_status))
 
 		return(list(latex=knitr::knit_child("Albumin_template3.Rmd", quiet = TRUE, envir = environment()), summary = summary))

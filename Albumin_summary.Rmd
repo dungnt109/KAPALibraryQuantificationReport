@@ -1,0 +1,36 @@
+\newpage 
+\section*{\textbf{\underline{Albumin Quantification Summary Report}}}
+
+```{r summary, summary.align="center", echo = FALSE}
+
+colnames(summary) <- c("No", "Date", "Type", "Threshold", "MNC Batch No.", "Status")
+
+
+colnames(summary) <- c("\\makecell[l]{No.}", 
+                       "\\makecell[l]{Run Date}", 
+                       "\\makecell[l]{Input Type}", 
+                       "\\makecell[l]{Threshold}", 
+                       "\\makecell[l]{MNC Batch No.}", 
+                       "\\makecell[l]{Overall QC Status}")
+ 
+kbl(summary,
+    format = "latex",
+    booktabs = TRUE,
+    escape = FALSE,
+    align = "l") 
+
+
+
+```
+
+
+Remarks (if any):
+
+\vspace{6cm}
+\renewcommand{\arraystretch}{2}
+\begin{tabularx}{\textwidth}{p{3cm}p{6cm}p{3cm}p{6cm}}
+Performed By: &  `r performed_by`    & Verified By: & \underline{\hspace{5cm}}  \\
+Signature:     &     & Signature:   & \underline{\hspace{5cm}}  \\
+Date:          &  `r run_date`    & Date:        & \underline{\hspace{5cm}}  \\
+\end{tabularx}
+
